@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Inkcorperated
 {
 	/// <summary>
-	/// This is the main type for your game.
+	/// Brandon was here~
 	/// </summary>
 	public class Game1 : Game
 	{
