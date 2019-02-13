@@ -6,6 +6,7 @@ namespace Inkcorperated
 {
 	/// <summary>
 	/// Jacob exists I guess, Brandon was here
+	/// Rhys: Is a hotdog a sandwich
 	/// </summary>
 	public class Game1 : Game
 	{
