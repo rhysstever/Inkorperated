@@ -5,7 +5,8 @@ using Microsoft.Xna.Framework.Input;
 namespace Inkcorperated
 {
 	/// <summary>
-	/// Is a hotdog a sandwich
+	/// Jacob exists I guess
+	/// Rhys: Is a hotdog a sandwich
 	/// </summary>
 	public class Game1 : Game
 	{
