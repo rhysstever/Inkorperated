@@ -15,6 +15,9 @@ namespace Inkcorperated
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
 
+        MapController controller;
+        MouseState previousMouseState;
+
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -29,8 +32,10 @@ namespace Inkcorperated
 		/// </summary>
 		protected override void Initialize()
 		{
-			// TODO: Add your initialization logic here
+            IsMouseVisible = true;
 
+            controller = new MapController();
+            previousMouseState = new MouseState();
 			base.Initialize();
 		}
 
@@ -43,7 +48,8 @@ namespace Inkcorperated
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// TODO: use this.Content to load your game content here
+            controller.LoadLevels(Content.Load<Texture2D>("character"), Content.Load<Texture2D>("block"), null, Content.Load<Texture2D>("goal"));
+            controller.LoadLevel(0);
 		}
 
 		/// <summary>
@@ -65,8 +71,9 @@ namespace Inkcorperated
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
 
-			// TODO: Add your update logic here
+            controller.CheckForRectDraw(previousMouseState);
 
+            previousMouseState = Mouse.GetState();
 			base.Update(gameTime);
 		}
 
@@ -78,7 +85,9 @@ namespace Inkcorperated
 		{
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
-			// TODO: Add your drawing code here
+            spriteBatch.Begin();
+            controller.Draw(spriteBatch);
+            spriteBatch.End();
 
 			base.Draw(gameTime);
 		}
