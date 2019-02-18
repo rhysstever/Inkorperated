@@ -47,7 +47,7 @@ namespace Inkcorperated
             //Sets up the goal to have the goal texture
             goal = new Drawable(new Rectangle(), goalTexture);
 
-            StreamReader reader = new StreamReader("Levels.txt");
+            StreamReader reader = new StreamReader("../../../../Content/Levels.txt");
             int amtOfLevels = int.Parse(reader.ReadLine());
             //For the amount of levels that need to be loaded
             for (int i = 0; i < amtOfLevels; i++)
