@@ -17,6 +17,7 @@ namespace Inkcorperated
 
         MapController controller;
         MouseState previousMouseState;
+        KeyboardState previousKeyboardState;
 
 		public Game1()
 		{
@@ -36,7 +37,8 @@ namespace Inkcorperated
 
             controller = new MapController();
             previousMouseState = new MouseState();
-			base.Initialize();
+            previousKeyboardState = new KeyboardState();
+            base.Initialize();
 		}
 
 		/// <summary>
@@ -72,7 +74,8 @@ namespace Inkcorperated
 				Exit();
 
             controller.CheckForRectDraw(previousMouseState);
-			controller.player.Move(); // to test player movement, will be altered later
+            controller.CheckMovement(previousKeyboardState);
+            previousKeyboardState = Keyboard.GetState();
             previousMouseState = Mouse.GetState();
 			base.Update(gameTime);
 		}

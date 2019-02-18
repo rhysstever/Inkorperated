@@ -14,7 +14,7 @@ namespace Inkcorperated
     {
         List<Map> levels;
         List<Block> customBlocks;
-        public Player player; // made public for now, will be changed later
+        Player player;
         Drawable goal;
         int currentLevel;
         Texture2D playerTexture;
@@ -26,6 +26,7 @@ namespace Inkcorperated
         {
             levels = new List<Map>();
             customBlocks = new List<Block>();
+            selectedType = BlockType.Basic;
         }
 
         /// <summary>
@@ -103,6 +104,18 @@ namespace Inkcorperated
             return true;
         }
 
+        public void CheckMovement(KeyboardState previousKeyboardState)
+        {
+            KeyboardState currentState = Keyboard.GetState();
+            player.Move();
+            if (currentState.IsKeyDown(Keys.D1))
+                selectedType = BlockType.Basic;
+            if (currentState.IsKeyDown(Keys.D2))
+                selectedType = BlockType.Speed;
+            if (currentState.IsKeyDown(Keys.D3))
+                selectedType = BlockType.Bouncy;
+        }
+
         public void CheckForRectDraw(MouseState previousMouseState)
         {
             MouseState currentState = Mouse.GetState();
@@ -169,7 +182,7 @@ namespace Inkcorperated
                     switch (customBlocks[i].Type)
                     {
                         case BlockType.Basic:
-                            customBlocks[i].Draw(batch, Color.White);
+                            customBlocks[i].Draw(batch, Color.Black);
                             break;
                         case BlockType.Speed:
                             customBlocks[i].Draw(batch, Color.Blue);
@@ -194,7 +207,7 @@ namespace Inkcorperated
                 switch (fixedBox.Type)
                 {
                     case BlockType.Basic:
-                        fixedBox.Draw(batch, Color.White);
+                        fixedBox.Draw(batch, Color.Black);
                         break;
                     case BlockType.Speed:
                         fixedBox.Draw(batch, Color.Blue);
