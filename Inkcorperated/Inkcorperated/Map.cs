@@ -89,7 +89,18 @@ namespace Inkcorperated
         /// </summary>
         public void Draw(SpriteBatch batch){
             foreach(Block b in map){
-                b.Draw(batch, Color.White);
+                switch (b.Type)
+                {
+                    case BlockType.Basic:
+                        b.Draw(batch, Color.Black);
+                        break;
+                    case BlockType.Speed:
+                        b.Draw(batch, Color.Blue);
+                        break;
+                    case BlockType.Bouncy:
+                        b.Draw(batch, Color.Red);
+                        break;
+                }
             }
             foreach(Enemy e in enemies){
                 e.Draw(batch, Color.White);

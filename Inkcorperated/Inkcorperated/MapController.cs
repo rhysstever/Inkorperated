@@ -33,13 +33,14 @@ namespace Inkcorperated
         /// Loads all levels in from an external file that exists at: *\Inkcorperated\Inkcorperated\bin\Windows\x86\Debug\Levels.txt
         /// File Formatting (all listed values are integers):
         /// amountOfLevels
-        /// playerStartX playerStartY playerWidth playerHeight                              |
-        /// inkLimit                                                                        |
-        /// goalX goalY goalWidth goalHeight                                                |
-        /// amtOfBlocks                                                                     |--- Repeat for amtOfLevels
-        /// blockX blockY blockWidth blockHeight      --repeat for amtOfBlocks              |
-        /// amtOfEnemies                                Should be 0 until enemies are made  |
-        /// enemyX enemyY enemyWidth enemyHeight      --repeat for amtOfEnemies             |
+        /// playerStartX playerStartY playerWidth playerHeight                                      |
+        /// inkLimit                                                                                |
+        /// goalX goalY goalWidth goalHeight                                                        |
+        /// amtOfBlocks                                                                             |--- Repeat for amtOfLevels
+        /// blockX blockY blockWidth blockHeight                |--repeat for amtOfBlocks           |
+        /// blockType                                           |                                   |
+        /// amtOfEnemies                                        Should be 0 until enemies are made  |
+        /// enemyX enemyY enemyWidth enemyHeight                --repeat for amtOfEnemies           |
         /// </summary>
         public void LoadLevels(Texture2D playerTexture, Texture2D blockTexture, Texture2D enemyTexture, Texture2D goalTexture)
         {
@@ -59,7 +60,7 @@ namespace Inkcorperated
                 //Loads all of the blocks in this level
                 for (int x = 0; x < amtOfBlocks; x++)
                 {
-                    newMap.AddBlock(new Block(ParseQuad(reader.ReadLine()), blockTexture, BlockType.Basic));
+                    newMap.AddBlock(new Block(ParseQuad(reader.ReadLine()), blockTexture, (BlockType)int.Parse(reader.ReadLine())));
                 }
 
                 int amtOfEnemies = int.Parse(reader.ReadLine());
