@@ -37,7 +37,7 @@ namespace Inkcorperated
 		}
 
 		// Methods
-		// possible parameter(Block floor)
+		//Block floor
 		public void Move()
 		{
 			KeyboardState kbState = Keyboard.GetState();
@@ -60,7 +60,7 @@ namespace Inkcorperated
 			}
 
 			// Jumping
-			if(!falling && kbState.IsKeyDown(Keys.Space))
+			if(!falling && kbState.IsKeyDown(Keys.W))
 			{
 				yVelocity = -15;
 				falling = true;

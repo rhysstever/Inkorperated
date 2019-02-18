@@ -44,6 +44,7 @@
     <Compile Include="Block.cs" />
     <Compile Include="Bullet.cs" />
     <Compile Include="Button.cs" />
+    <Compile Include="CollisionManager.cs" />
     <Compile Include="Drawable.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Entity.cs" />
