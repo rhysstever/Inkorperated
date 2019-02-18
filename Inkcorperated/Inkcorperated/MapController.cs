@@ -20,6 +20,7 @@ namespace Inkcorperated
         Texture2D playerTexture;
         Texture2D blockTexture;
         Texture2D enemyTexture;
+        BlockType selectedType;
 
         public MapController()
         {
@@ -57,7 +58,7 @@ namespace Inkcorperated
                 //Loads all of the blocks in this level
                 for (int x = 0; x < amtOfBlocks; x++)
                 {
-                    newMap.AddBlock(new Block(ParseQuad(reader.ReadLine()), blockTexture));
+                    newMap.AddBlock(new Block(ParseQuad(reader.ReadLine()), blockTexture, BlockType.Basic));
                 }
 
                 int amtOfEnemies = int.Parse(reader.ReadLine());
@@ -108,7 +109,7 @@ namespace Inkcorperated
             //If the player started clicking this frame
             if (previousMouseState.LeftButton == ButtonState.Released && currentState.LeftButton == ButtonState.Pressed)
             {
-                customBlocks.Add(new Block(new Rectangle(RoundDownToNearestTen(currentState.X), RoundDownToNearestTen(currentState.Y), 0, 0), blockTexture));
+                customBlocks.Add(new Block(new Rectangle(RoundDownToNearestTen(currentState.X), RoundDownToNearestTen(currentState.Y), 0, 0), blockTexture, selectedType));
             }
 
             //if the player is clicking
@@ -165,10 +166,21 @@ namespace Inkcorperated
                 //draws each of the player-drawn blocks
                 for (int i = 0; i < customBlocks.Count - 1; i++)
                 {
-                    customBlocks[i].Draw(batch, Color.White);
+                    switch (customBlocks[i].Type)
+                    {
+                        case BlockType.Basic:
+                            customBlocks[i].Draw(batch, Color.White);
+                            break;
+                        case BlockType.Speed:
+                            customBlocks[i].Draw(batch, Color.Blue);
+                            break;
+                        case BlockType.Bouncy:
+                            customBlocks[i].Draw(batch, Color.Red);
+                            break;
+                    }
                 }
                 //Fixes the values of the one the player is currently drawing so it draws correctly
-                Block fixedBox = new Block(new Rectangle(customBlocks[customBlocks.Count - 1].X, customBlocks[customBlocks.Count - 1].Y, customBlocks[customBlocks.Count - 1].Width, customBlocks[customBlocks.Count - 1].Height), blockTexture);
+                Block fixedBox = new Block(new Rectangle(customBlocks[customBlocks.Count - 1].X, customBlocks[customBlocks.Count - 1].Y, customBlocks[customBlocks.Count - 1].Width, customBlocks[customBlocks.Count - 1].Height), blockTexture, customBlocks[customBlocks.Count - 1].Type);
                 if (fixedBox.Height < 0)
                 {
                     fixedBox.Y += fixedBox.Height;
@@ -179,7 +191,18 @@ namespace Inkcorperated
                     fixedBox.X += fixedBox.Width;
                     fixedBox.Width *= -1;
                 }
-                fixedBox.Draw(batch, Color.White);
+                switch (fixedBox.Type)
+                {
+                    case BlockType.Basic:
+                        fixedBox.Draw(batch, Color.White);
+                        break;
+                    case BlockType.Speed:
+                        fixedBox.Draw(batch, Color.Blue);
+                        break;
+                    case BlockType.Bouncy:
+                        fixedBox.Draw(batch, Color.Red);
+                        break;
+                }
             }
 
         }
