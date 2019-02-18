@@ -16,6 +16,8 @@ namespace Inkcorperated
         {
 
         }
+
+        //Mouse is within the button
         public bool Collided()
         {
             return this.Bounds.Intersects(new Rectangle(Mouse.GetState().Position, new Point(1, 1)));

@@ -11,14 +11,11 @@ namespace Inkcorperated
     class Bullet : Drawable
     {
         private int bulletDamage;
-        public Bullet(Rectangle bounds, Texture2D texture) : base(bounds, texture)
+        private Entity team;
+        public Bullet(Rectangle bounds, Texture2D texture, Entity _team) : base(bounds, texture)
         {
             bulletDamage = 1;
-        }
-
-        public bool Collided(Entity character)
-        {
-            return this.Bounds.Intersects(character.Bounds);
+            team = _team; //Need to figure out how to deal with team
         }
     }
 }
