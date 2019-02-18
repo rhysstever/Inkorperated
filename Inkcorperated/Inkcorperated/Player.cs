@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Inkcorperated
 {
@@ -12,9 +13,16 @@ namespace Inkcorperated
     {
 		// Fields
 
-		private int inkLevels; 
+		private int inkLevels;
+		private int yVelocity;
+		private bool falling;
+		private const int GRAVITY = 1;
+		private const int SPEED = 2;
+
+		// Properties
 		
 		// Constructor
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -24,13 +32,39 @@ namespace Inkcorperated
 		public Player(Rectangle bounds, Texture2D texture, float fireRate = 1.0f) : base(bounds, texture, fireRate)
 		{
 			inkLevels = 100; // starting value of ink (can be changed for balancing)
+			yVelocity = 0;
+			falling = false;
 		}
 
 		// Methods
-
-		public void Move(Block floor)
+		// possible parameter(Block floor)
+		public void Move()
 		{
+			KeyboardState kbState = Keyboard.GetState();
 
+			// Moving left or right
+			if(kbState.IsKeyDown(Keys.D))
+			{
+				X += SPEED;
+			}
+			else if(kbState.IsKeyDown(Keys.A))
+			{
+				X -= SPEED;
+			}
+
+			// Falling
+			if(falling)
+			{
+				Y += yVelocity;
+				yVelocity = Math.Min(yVelocity + GRAVITY, 10);
+			}
+
+			// Jumping
+			if(!falling && kbState.IsKeyDown(Keys.Space))
+			{
+				yVelocity = -15;
+				falling = true;
+			}
 		}
     }
 }

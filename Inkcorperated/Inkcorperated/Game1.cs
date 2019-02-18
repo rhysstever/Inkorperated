@@ -72,7 +72,7 @@ namespace Inkcorperated
 				Exit();
 
             controller.CheckForRectDraw(previousMouseState);
-
+			controller.player.Move(); // to test player movement, will be altered later
             previousMouseState = Mouse.GetState();
 			base.Update(gameTime);
 		}
