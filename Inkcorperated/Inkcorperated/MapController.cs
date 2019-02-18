@@ -14,7 +14,7 @@ namespace Inkcorperated
     {
         List<Map> levels;
         List<Block> customBlocks;
-        Player player;
+        public Player player; // made public for now, will be changed later
         Drawable goal;
         int currentLevel;
         Texture2D playerTexture;
