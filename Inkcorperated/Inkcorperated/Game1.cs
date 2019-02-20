@@ -9,17 +9,39 @@ namespace Inkcorperated
     /// Brandon was here
 	/// Rhys: Is a hotdog a sandwich
 	/// Sean is around
-	/// </summary>
+	/// </summary> 
+
+    // Enums to hold finite states
+    public enum CharacterStates
+    {
+        Jump,
+        Stand,
+        Run
+    }
+
+    public enum GameStates
+    {
+        MainMenu,
+        PauseMenu,
+        Game,
+        GameOver
+    }
+    
 	public class Game1 : Game
 	{
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
 
+        private CharacterStates currentCharaState;
+        private GameStates currentGameState;
+
+        private Player player; // Have to initialize
         MapController controller;
         MouseState previousMouseState;
         KeyboardState previousKeyboardState;
+        private KeyboardState kbState;
 
-		public Game1()
+        public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
@@ -34,6 +56,9 @@ namespace Inkcorperated
 		protected override void Initialize()
 		{
             IsMouseVisible = true;
+
+            currentCharaState = CharacterStates.Stand;
+            currentGameState = GameStates.MainMenu;
 
             controller = new MapController();
             previousMouseState = new MouseState();
@@ -77,7 +102,64 @@ namespace Inkcorperated
             controller.CheckMovement(previousKeyboardState);
             previousKeyboardState = Keyboard.GetState();
             previousMouseState = Mouse.GetState();
-			base.Update(gameTime);
+
+            if (currentGameState == GameStates.MainMenu)
+            {
+                if (SingleKeyPress(Keys.Enter))
+                {
+                    currentGameState = GameStates.Game;
+                    //ResetGame();
+                }
+            }
+
+            else if (currentGameState == GameStates.PauseMenu)
+            {
+                if (SingleKeyPress(Keys.Escape))
+                {
+                    currentGameState = GameStates.Game;
+                }
+            }
+
+            else if (currentGameState == GameStates.Game)
+            {
+                previousKeyboardState = kbState;
+                kbState = Keyboard.GetState();
+
+                if (SingleKeyPress(Keys.Escape))
+                {
+                    currentGameState = GameStates.PauseMenu;
+                }
+
+                player.Move();
+
+                if(currentCharaState == CharacterStates.Jump)
+                {
+
+                }
+
+                else if(currentCharaState == CharacterStates.Stand)
+                {
+
+                }
+
+                else if(currentCharaState == CharacterStates.Run)
+                {
+
+                }
+                
+            }
+
+            else if (currentGameState == GameStates.GameOver)
+            {
+                if (SingleKeyPress(Keys.Enter))
+                {
+                    currentGameState = GameStates.MainMenu;
+                }
+            }
+
+            
+
+            base.Update(gameTime);
 		}
 
 		/// <summary>
@@ -94,5 +176,27 @@ namespace Inkcorperated
 
 			base.Draw(gameTime);
 		}
-	}
+
+        // Helper Methods
+        /// <summary>
+        /// Returns true if this is the first frame that the key was pressed
+        /// False otherwise
+        /// </summary>
+        /// <param name="key">Represents the key to check (One of the "Keys" enum values)</param>
+        public bool SingleKeyPress(Keys key)
+        {
+            previousKeyboardState = kbState;
+            kbState = Keyboard.GetState();
+
+            if (kbState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+    }
 }
