@@ -12,6 +12,8 @@ namespace Inkcorperated
 	/// </summary> 
 
     // Enums to hold finite states
+
+    // This enumerator may not be needed
     public enum CharacterStates
     {
         Jump,
@@ -120,6 +122,7 @@ namespace Inkcorperated
                 }
             }
 
+            // Main Game loop
             else if (currentGameState == GameStates.Game)
             {
                 previousKeyboardState = kbState;
@@ -132,20 +135,21 @@ namespace Inkcorperated
 
                 player.Move();
 
-                if(currentCharaState == CharacterStates.Jump)
-                {
+                // This may not actually be needed
+                //if(currentCharaState == CharacterStates.Jump)
+                //{
 
-                }
+                //}
 
-                else if(currentCharaState == CharacterStates.Stand)
-                {
+                //else if(currentCharaState == CharacterStates.Stand)
+                //{
 
-                }
+                //}
 
-                else if(currentCharaState == CharacterStates.Run)
-                {
+                //else if(currentCharaState == CharacterStates.Run)
+                //{
 
-                }
+                //}
                 
             }
 
@@ -198,5 +202,15 @@ namespace Inkcorperated
             }
         }
         
+        /// <summary>
+        /// Resets the data that needs to be reset to the initial state when the game restarts the level
+        /// </summary>
+        public void ResetGame()
+        {
+            // Ink levels
+            // Spawned in blocks to be removed
+            // Monster positions
+            // etc
+        }
     }
 }
