@@ -64,7 +64,7 @@ namespace Inkcorperated
             currentGameState = GameStates.MainMenu;
 
             controller = new MapController();
-			collisionManager = new CollisionManager();
+			collisionManager = new CollisionManager(controller);
             previousMouseState = new MouseState();
             previousKeyboardState = new KeyboardState();
             base.Initialize();

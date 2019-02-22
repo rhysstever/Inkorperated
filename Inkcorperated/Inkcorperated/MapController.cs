@@ -16,13 +16,21 @@ namespace Inkcorperated
         List<Block> customBlocks;
         Player player;
         Drawable goal;
+		List<Bullet> bullets;
         int currentLevel;
         Texture2D playerTexture;
         Texture2D blockTexture;
         Texture2D enemyTexture;
         BlockType selectedType;
 
-        public MapController()
+		// Properties
+
+		public List<Block> CustomBlocks { get { return customBlocks; } }
+		public Player LevelPlayer { get { return player; } }
+		public Drawable Goal { get { return goal; } }
+		public List<Bullet> Bullets { get { return bullets; } }
+
+		public MapController()
         {
             levels = new List<Map>();
             customBlocks = new List<Block>();
@@ -89,6 +97,11 @@ namespace Inkcorperated
             goal.Width = levels[currentLevel].Goal.Width;
             goal.Height = levels[currentLevel].Goal.Height;
         }
+
+		public Map GetCurrentMap()
+		{
+			return levels[currentLevel];
+		}
 
         public void ResetLevel()
         {

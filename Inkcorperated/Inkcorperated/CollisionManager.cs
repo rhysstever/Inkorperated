@@ -9,18 +9,24 @@ namespace Inkcorperated
 	class CollisionManager
 	{
 		// Fields
+		MapController controller;
+		Map currentMap;
 
 		// Properties
-
+		
 		// Constructor
 
-		/// <summary>
-		/// Creates an empty Collision Manager object
-		/// to handle all collisions in the game
-		/// </summary>
-		public CollisionManager() { }
+		public CollisionManager(MapController controller)
+		{
+			this.controller = controller;
+		}
 
 		// Methods
+		
+		public void GetCurrentMap()
+		{
+			currentMap = controller.GetCurrentMap();
+		}
 
 		/// <summary>
 		/// Checks if the two Drawable objects are colliding
@@ -36,22 +42,8 @@ namespace Inkcorperated
 				return false;
 		}
 
-		public void Colliding(Entity unit, List<Block> platforms)
+		public void Colliding()
 		{
-			foreach(Block platform in platforms)
-			{
-				if (isColliding(unit, platform))
-				{
-					if(unit.Y > platform.Y) // player is above the platform, needs to be moved back up
-					{
-						unit.Y--;
-					}
-					else if(unit.Y < platform.Y) // player is below platform, needs to be moved back down
-					{
-						unit.Y++;
-					}
-				}
-			}
 			
 		}
 	}
