@@ -14,10 +14,20 @@ namespace Inkcorperated
 
 		// Constructor
 
+		/// <summary>
+		/// Creates an empty Collision Manager object
+		/// to handle all collisions in the game
+		/// </summary>
 		public CollisionManager() { }
 
 		// Methods
 
+		/// <summary>
+		/// Checks if the two Drawable objects are colliding
+		/// </summary>
+		/// <param name="objOne">The first object</param>
+		/// <param name="objTwo">The second object</param>
+		/// <returns>Returns if they are colliding</returns>
 		public bool isColliding(Drawable objOne, Drawable objTwo)
 		{
 			if (objOne.Bounds.Intersects(objTwo.Bounds))
@@ -26,12 +36,23 @@ namespace Inkcorperated
 				return false;
 		}
 
-		public void Standing(Entity unit, Block platform)
+		public void Colliding(Entity unit, List<Block> platforms)
 		{
-			if(isColliding(unit, platform))
+			foreach(Block platform in platforms)
 			{
-				// makes player (or enemy) not fall through platforms
+				if (isColliding(unit, platform))
+				{
+					if(unit.Y > platform.Y) // player is above the platform, needs to be moved back up
+					{
+						unit.Y--;
+					}
+					else if(unit.Y < platform.Y) // player is below platform, needs to be moved back down
+					{
+						unit.Y++;
+					}
+				}
 			}
+			
 		}
 	}
 }

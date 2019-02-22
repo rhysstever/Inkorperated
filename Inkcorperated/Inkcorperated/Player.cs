@@ -53,6 +53,8 @@ namespace Inkcorperated
 			}
 
 			// Falling
+			// Changes the player's y-position based on the y-velocity
+			// Updates y-velocity by gravity constant
 			if(falling)
 			{
 				Y += yVelocity;
@@ -60,6 +62,7 @@ namespace Inkcorperated
 			}
 
 			// Jumping
+			// Gives player an initial y-velocity to jump into the air
 			if(!falling && kbState.IsKeyDown(Keys.W))
 			{
 				yVelocity = -15;

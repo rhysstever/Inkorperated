@@ -39,6 +39,7 @@ namespace Inkcorperated
 
         private Player player; // Have to initialize
         MapController controller;
+		CollisionManager collisionManager;
         MouseState previousMouseState;
         KeyboardState previousKeyboardState;
         private KeyboardState kbState;
@@ -63,6 +64,7 @@ namespace Inkcorperated
             currentGameState = GameStates.MainMenu;
 
             controller = new MapController();
+			collisionManager = new CollisionManager();
             previousMouseState = new MouseState();
             previousKeyboardState = new KeyboardState();
             base.Initialize();
@@ -134,6 +136,8 @@ namespace Inkcorperated
                 }
 
                 player.Move();
+				// checks for collisions between player and all blocks on the screen
+				// collisionManager.Colliding(player, ) 
 
                 // This may not actually be needed
                 //if(currentCharaState == CharacterStates.Jump)
