@@ -20,6 +20,17 @@ namespace Inkcorperated
 		private const int SPEED = 2;
 
 		// Properties
+
+		public bool Falling
+		{
+			get { return falling; }
+			set { falling = value; } 
+		}
+		public int YVelocity
+		{
+			get { return yVelocity; }
+			set { yVelocity = value; } 
+		}
 		
 		// Constructor
 
@@ -37,7 +48,6 @@ namespace Inkcorperated
 		}
 
 		// Methods
-		//Block floor
 		public void Move()
 		{
 			KeyboardState kbState = Keyboard.GetState();

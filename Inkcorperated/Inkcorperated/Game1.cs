@@ -136,8 +136,7 @@ namespace Inkcorperated
                 }
 
                 player.Move();
-				// checks for collisions between player and all blocks on the screen
-				// collisionManager.Colliding(player, ) 
+				collisionManager.Colliding(); 
 
                 // This may not actually be needed
                 //if(currentCharaState == CharacterStates.Jump)

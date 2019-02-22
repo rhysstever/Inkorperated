@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,7 +45,29 @@ namespace Inkcorperated
 
 		public void Colliding()
 		{
+			// Checks collisions between the player and each block on the screen
+			foreach(Block block in controller.CustomBlocks)
+			{
+				if (controller.LevelPlayer.Bounds.Intersects(block.Bounds))
+				{
+					Rectangle intersection = Rectangle.Intersect(controller.LevelPlayer.Bounds, block.Bounds);
+					// Collision is occuring on top or bottom
+					if (intersection.Width > intersection.Height)
+					{
+						controller.LevelPlayer.YVelocity = 0;
+					}
+					// Collision is occuring on either the right or left
+					else
+					{
+
+					}
+
+					controller.LevelPlayer.Y++;
+					controller.LevelPlayer.Falling = false;
+				}
+			}
 			
+			//Rectangle bounceCheck = new Rectangle(controller.LevelPlayer.X, controller.LevelPlayer.Y + controller.LevelPlayer.Height, controller.LevelPlayer.Width, 1);
 		}
 	}
 }
