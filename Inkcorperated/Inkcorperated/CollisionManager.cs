@@ -45,29 +45,39 @@ namespace Inkcorperated
 
 		public void Colliding()
 		{
+			controller.LevelPlayer.Falling = false;
+
+			Rectangle bounceCheck = new Rectangle(controller.LevelPlayer.X, controller.LevelPlayer.Y + controller.LevelPlayer.Height, controller.LevelPlayer.Width, 1);
+
 			// Checks collisions between the player and each block on the screen
-			foreach(Block block in controller.CustomBlocks)
+			foreach (Block block in controller.CustomBlocks)
 			{
 				if (controller.LevelPlayer.Bounds.Intersects(block.Bounds))
 				{
 					Rectangle intersection = Rectangle.Intersect(controller.LevelPlayer.Bounds, block.Bounds);
+
 					// Collision is occuring on top or bottom
 					if (intersection.Width > intersection.Height)
 					{
+						// Moves the player up or down away from the block
+						controller.LevelPlayer.Y -= intersection.Height * Math.Sign(block.Bounds.Y - controller.LevelPlayer.Y);
 						controller.LevelPlayer.YVelocity = 0;
 					}
 					// Collision is occuring on either the right or left
 					else
 					{
-
+						// Moves the player left or right away from the block
+						controller.LevelPlayer.X -= intersection.Width * Math.Sign(block.Bounds.X - controller.LevelPlayer.X);
 					}
-
-					controller.LevelPlayer.Y++;
+				}
+				else if(block.Bounds.Intersects(bounceCheck) && controller.LevelPlayer.YVelocity >= 0)
+				{
 					controller.LevelPlayer.Falling = false;
+					controller.LevelPlayer.YVelocity = 0;
 				}
 			}
 			
-			//Rectangle bounceCheck = new Rectangle(controller.LevelPlayer.X, controller.LevelPlayer.Y + controller.LevelPlayer.Height, controller.LevelPlayer.Width, 1);
+			
 		}
 	}
 }
