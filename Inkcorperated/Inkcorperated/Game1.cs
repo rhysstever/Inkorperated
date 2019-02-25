@@ -37,7 +37,7 @@ namespace Inkcorperated
         private CharacterStates currentCharaState;
         private GameStates currentGameState;
 
-        private Player player; // Have to initialize
+        private Player player; 
         MapController controller;
 		CollisionManager collisionManager;
         MouseState previousMouseState;

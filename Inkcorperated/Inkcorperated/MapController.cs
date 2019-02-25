@@ -24,8 +24,7 @@ namespace Inkcorperated
         BlockType selectedType;
 
 		// Properties
-
-		public List<Map> Level { get { return levels; } }
+		
 		public List<Block> CustomBlocks { get { return customBlocks; } }
 		public Player LevelPlayer { get { return player; } }
 		public Drawable Goal { get { return goal; } }
