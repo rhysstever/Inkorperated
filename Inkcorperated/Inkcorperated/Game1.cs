@@ -61,7 +61,7 @@ namespace Inkcorperated
             IsMouseVisible = true;
 
             currentCharaState = CharacterStates.Stand;
-            currentGameState = GameStates.MainMenu;
+            currentGameState = GameStates.Game;
 
             controller = new MapController();
 			collisionManager = new CollisionManager(controller);
@@ -78,9 +78,9 @@ namespace Inkcorperated
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-
             controller.LoadLevels(Content.Load<Texture2D>("character"), Content.Load<Texture2D>("block"), null, Content.Load<Texture2D>("goal"));
             controller.LoadLevel(0);
+			player = controller.LevelPlayer;
 		}
 
 		/// <summary>
@@ -135,7 +135,7 @@ namespace Inkcorperated
                     currentGameState = GameStates.PauseMenu;
                 }
 
-                player.Move();
+                player.Move(gameTime);
 				collisionManager.Colliding(); 
 
                 // This may not actually be needed

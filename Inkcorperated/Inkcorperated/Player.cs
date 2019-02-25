@@ -48,7 +48,7 @@ namespace Inkcorperated
 		}
 
 		// Methods
-		public void Move()
+		public void Move(GameTime gameTime)
 		{
 			KeyboardState kbState = Keyboard.GetState();
 
@@ -61,14 +61,15 @@ namespace Inkcorperated
 			{
 				X -= SPEED;
 			}
-
+			
 			// Falling
 			// Changes the player's y-position based on the y-velocity
 			// Updates y-velocity by gravity constant
 			if(falling)
 			{
 				Y += yVelocity;
-				yVelocity = Math.Min(yVelocity + GRAVITY, 10);
+				//yVelocity = Math.Min(yVelocity + GRAVITY, 10);
+				yVelocity = yVelocity + GRAVITY;
 			}
 
 			// Jumping
