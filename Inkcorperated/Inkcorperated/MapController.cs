@@ -25,6 +25,7 @@ namespace Inkcorperated
 
 		// Properties
 
+		public List<Map> Level { get { return levels; } }
 		public List<Block> CustomBlocks { get { return customBlocks; } }
 		public Player LevelPlayer { get { return player; } }
 		public Drawable Goal { get { return goal; } }
@@ -121,7 +122,7 @@ namespace Inkcorperated
         public void CheckMovement(KeyboardState previousKeyboardState)
         {
             KeyboardState currentState = Keyboard.GetState();
-            player.Move();
+            //player.Move();
             if (currentState.IsKeyDown(Keys.D1))
                 selectedType = BlockType.Basic;
             if (currentState.IsKeyDown(Keys.D2))
