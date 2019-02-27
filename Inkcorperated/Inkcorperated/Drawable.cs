@@ -13,64 +13,30 @@ namespace Inkcorperated
         private Rectangle bounds;
         private Texture2D texture;
 
-        public Rectangle Bounds
-        {
-            get
-            {
-                return bounds;
-            }
-        }
+        public Rectangle Bounds { get{ return bounds; } }
 
         public int X
-        {
-            get
-            {
-                return bounds.X;
-            }
-
-            set
-            {
-                bounds.X = value;
-            }
+		{
+			get { return bounds.X; }
+			set { bounds.X = value; }
         }
 
         public int Y
         {
-            get
-            {
-                return bounds.Y;
-            }
-
-            set
-            {
-                bounds.Y = value;
-            }
+            get { return bounds.Y; }
+            set { bounds.Y = value; }
         }
 
         public int Width
         {
-            get
-            {
-                return bounds.Width;
-            }
-
-            set
-            {
-                bounds.Width = value;
-            }
+            get { return bounds.Width; }
+            set { bounds.Width = value; }
         }
 
         public int Height
         {
-            get
-            {
-                return bounds.Height;
-            }
-
-            set
-            {
-                bounds.Height = value;
-            }
+            get { return bounds.Height; }
+            set { bounds.Height = value; }
         }
 
         public Drawable(Rectangle bounds, Texture2D texture)

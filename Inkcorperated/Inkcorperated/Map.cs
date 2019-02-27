@@ -16,37 +16,10 @@ namespace Inkcorperated
         private int inkLimit;
         private Rectangle goal;
 
-        public Rectangle PlayerStart
-        {
-            get
-            {
-                return playerStart;
-            }
-        }
-
-        public Rectangle Goal
-        {
-            get
-            {
-                return goal;
-            }
-        }
-
-        public int InkLimit
-        {
-            get
-            {
-                return inkLimit;
-            }
-        }
-
-		public List<Block> MapBlocks
-		{
-			get
-			{
-				return map;
-			}
-		}
+        public Rectangle PlayerStart { get { return playerStart; } }
+        public Rectangle Goal { get { return goal; } }
+        public int InkLimit { get { return inkLimit; } }
+		public List<Block> MapBlocks { get { return map; } }
 
 		public Map(Rectangle playerStart, int inkLimit, Rectangle goal){
             this.playerStart = playerStart;

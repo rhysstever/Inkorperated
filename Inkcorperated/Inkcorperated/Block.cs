@@ -17,13 +17,7 @@ namespace Inkcorperated
     {
         BlockType blockType;
 
-        public BlockType Type
-        {
-            get
-            {
-                return blockType;
-            }
-        }
+        public BlockType Type { get { return blockType; } }
 
         public Block(Rectangle bounds, Texture2D texture, BlockType bType) : base(bounds, texture)
         {
