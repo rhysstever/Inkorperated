@@ -61,7 +61,7 @@ namespace Inkcorperated
             IsMouseVisible = true;
 
             currentCharaState = CharacterStates.Stand;
-            currentGameState = GameStates.Game;
+            currentGameState = GameStates.MainMenu;
 
             controller = new MapController();
 			collisionManager = new CollisionManager(controller);
@@ -135,7 +135,9 @@ namespace Inkcorperated
                     currentGameState = GameStates.PauseMenu;
                 }
 
+				// Handles player movement
                 player.Move(gameTime);
+				// Handles collisions between the player and all other collidables
 				collisionManager.Colliding(); 
 
                 // This may not actually be needed

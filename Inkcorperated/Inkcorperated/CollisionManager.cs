@@ -81,6 +81,12 @@ namespace Inkcorperated
 					controller.LevelPlayer.YVelocity = 0;
 				}
 			}
+
+			// Checks for win condition (if player collides with the goal flag)
+			if(isColliding(controller.LevelPlayer, controller.Goal))
+			{
+				// moves to next level
+			}
 		}
 	}
 }
