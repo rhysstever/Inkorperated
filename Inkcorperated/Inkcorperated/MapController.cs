@@ -35,6 +35,7 @@ namespace Inkcorperated
             levels = new List<Map>();
             customBlocks = new List<Block>();
             selectedType = BlockType.Basic;
+            player = new Player(new Rectangle(), null, 0);
         }
 
         /// <summary>
@@ -90,7 +91,7 @@ namespace Inkcorperated
             //Clears all of the player-drawn blocks
             customBlocks.Clear();
             //Updates the player position and size
-            player = new Player(levels[currentLevel].PlayerStart, playerTexture);
+            player.UpdatePlayer(levels[currentLevel].PlayerStart, playerTexture, levels[currentLevel].InkLimit);
             //Changes the position and size of the goal to match the new level's
             goal.X = levels[currentLevel].Goal.X;
             goal.Y = levels[currentLevel].Goal.Y;
@@ -118,16 +119,26 @@ namespace Inkcorperated
             return true;
         }
 
-        public void CheckMovement(KeyboardState previousKeyboardState)
+        public void CheckBlockTypeChange(KeyboardState previousKeyboardState)
         {
             KeyboardState currentState = Keyboard.GetState();
-            //player.Move();
-            if (currentState.IsKeyDown(Keys.D1))
+            
+            if (currentState.IsKeyDown(Keys.D1) || (SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Speed) || (SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Bouncy))
                 selectedType = BlockType.Basic;
-            if (currentState.IsKeyDown(Keys.D2))
+            else if (currentState.IsKeyDown(Keys.D2) || (SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Bouncy) || (SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Basic))
                 selectedType = BlockType.Speed;
-            if (currentState.IsKeyDown(Keys.D3))
+            else if (currentState.IsKeyDown(Keys.D3) || (SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Basic) || (SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Speed))
                 selectedType = BlockType.Bouncy;
+        }
+
+        /// <summary>
+        /// Returns true if this is the first frame that the key was pressed
+        /// False otherwise
+        /// </summary>
+        /// <param name="key">Represents the key to check (One of the "Keys" enum values)</param>
+        public bool SingleKeyPress(KeyboardState previous, KeyboardState current, Keys key)
+        {
+            return current.IsKeyDown(key) && previous.IsKeyUp(key);
         }
 
         public void CheckForRectDraw(MouseState previousMouseState)
@@ -160,19 +171,35 @@ namespace Inkcorperated
                     customBlocks[customBlocks.Count - 1].X += customBlocks[customBlocks.Count - 1].Width;
                     customBlocks[customBlocks.Count - 1].Width *= -1;
                 }
+                bool removed = false;
                 //Removes the box if it intersects the player, goal or any other boxes
                 if (customBlocks[customBlocks.Count - 1].Bounds.Intersects(player.Bounds))
+                {
                     customBlocks.RemoveAt(customBlocks.Count - 1);
+                    removed = true;
+                }
                 for (int i = 0; i < customBlocks.Count - 1; i++)
                 {
                     if (customBlocks[customBlocks.Count - 1].Bounds.Intersects(customBlocks[i].Bounds))
                     {
                         customBlocks.RemoveAt(customBlocks.Count - 1);
+                        removed = true;
                         break;
                     }
                 }
                 if (customBlocks.Count > 0 && levels[currentLevel].IntersectsWithExisting(customBlocks[customBlocks.Count - 1]))
+                {
                     customBlocks.RemoveAt(customBlocks.Count - 1);
+                    removed = true;
+                }
+
+                if (!removed)
+                {
+                    if(player.InkLevels >= customBlocks[customBlocks.Count - 1].Width * customBlocks[customBlocks.Count - 1].Height / 100)
+                        player.InkLevels -= customBlocks[customBlocks.Count - 1].Width * customBlocks[customBlocks.Count - 1].Height / 100;
+                    else
+                        customBlocks.RemoveAt(customBlocks.Count - 1);
+                }
             }
             //Test script for multiple levels
             if (previousMouseState.RightButton == ButtonState.Released && currentState.RightButton == ButtonState.Pressed)
@@ -231,8 +258,8 @@ namespace Inkcorperated
                         break;
                 }
             }
-
         }
+
         /// <summary>
         /// Parses a string in the form "number1 number2 number3 number4" into a rectangle with the corresponding values
         /// </summary>

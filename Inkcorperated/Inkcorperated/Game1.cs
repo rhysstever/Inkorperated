@@ -42,7 +42,8 @@ namespace Inkcorperated
 		CollisionManager collisionManager;
         MouseState previousMouseState;
         KeyboardState previousKeyboardState;
-        private KeyboardState kbState;
+        private MouseState currentMouseState;
+        private KeyboardState currentKBState;
 
         public Game1()
 		{
@@ -79,7 +80,6 @@ namespace Inkcorperated
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
             controller.LoadLevels(Content.Load<Texture2D>("character"), Content.Load<Texture2D>("block"), null, Content.Load<Texture2D>("goal"));
-            controller.LoadLevel(0);
 			player = controller.LevelPlayer;
 		}
 
@@ -98,20 +98,17 @@ namespace Inkcorperated
 		/// </summary>
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
-		{
-			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-				Exit();
+        {
+            currentKBState = Keyboard.GetState();
+            currentMouseState = Mouse.GetState();
 
-            controller.CheckForRectDraw(previousMouseState);
-            controller.CheckMovement(previousKeyboardState);
-            previousKeyboardState = Keyboard.GetState();
-            previousMouseState = Mouse.GetState();
 
             if (currentGameState == GameStates.MainMenu)
             {
                 if (SingleKeyPress(Keys.Enter))
                 {
                     currentGameState = GameStates.Game;
+                    controller.LoadLevel(0);
                     //ResetGame();
                 }
             }
@@ -127,9 +124,6 @@ namespace Inkcorperated
             // Main Game loop
             else if (currentGameState == GameStates.Game)
             {
-                previousKeyboardState = kbState;
-                kbState = Keyboard.GetState();
-
                 if (SingleKeyPress(Keys.Escape))
                 {
                     currentGameState = GameStates.PauseMenu;
@@ -138,7 +132,11 @@ namespace Inkcorperated
 				// Handles player movement
                 player.Move(gameTime);
 				// Handles collisions between the player and all other collidables
-				collisionManager.Colliding(); 
+				collisionManager.Colliding();
+                //Handles drawing blocks
+                controller.CheckForRectDraw(previousMouseState);
+                //Handles switching block types
+                controller.CheckBlockTypeChange(previousKeyboardState);
 
                 // This may not actually be needed
                 //if(currentCharaState == CharacterStates.Jump)
@@ -155,7 +153,7 @@ namespace Inkcorperated
                 //{
 
                 //}
-                
+
             }
 
             else if (currentGameState == GameStates.GameOver)
@@ -165,8 +163,9 @@ namespace Inkcorperated
                     currentGameState = GameStates.MainMenu;
                 }
             }
-
             
+            previousKeyboardState = currentKBState;
+            previousMouseState = currentMouseState;
 
             base.Update(gameTime);
 		}
@@ -180,7 +179,12 @@ namespace Inkcorperated
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
-            controller.Draw(spriteBatch);
+            switch (currentGameState)
+            {
+                case GameStates.Game:
+                    controller.Draw(spriteBatch);
+                    break;
+            }
             spriteBatch.End();
 
 			base.Draw(gameTime);
@@ -194,10 +198,7 @@ namespace Inkcorperated
         /// <param name="key">Represents the key to check (One of the "Keys" enum values)</param>
         public bool SingleKeyPress(Keys key)
         {
-            previousKeyboardState = kbState;
-            kbState = Keyboard.GetState();
-
-            if (kbState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key))
+            if (currentKBState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key))
             {
                 return true;
             }

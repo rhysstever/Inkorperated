@@ -31,21 +31,38 @@ namespace Inkcorperated
 			get { return yVelocity; }
 			set { yVelocity = value; } 
 		}
+        public int InkLevels
+        {
+            get { return inkLevels; }
+            set { inkLevels = value; }
+        }
 		
 		// Constructor
-
-		/// <summary>
-		/// 
-		/// </summary>
+        
 		/// <param name="bounds">The hitbox of the player</param>
 		/// <param name="texture">The visual of the player</param>
 		/// <param name="fireRate">How often the player is allowed to shoot</param>
-		public Player(Rectangle bounds, Texture2D texture, float fireRate = 1.0f) : base(bounds, texture, fireRate)
+		public Player(Rectangle bounds, Texture2D texture, int inkLevels, float fireRate = 1.0f) : base(bounds, texture, fireRate)
 		{
-			inkLevels = 100; // starting value of ink (can be changed for balancing)
+			this.inkLevels = inkLevels; // starting value of ink (can be changed for balancing)
 			yVelocity = 0;
 			falling = false;
-		}
+        }
+
+        /// <summary>
+        /// Allows remaking of the player without loss of the reference
+        /// </summary>
+        public void UpdatePlayer(Rectangle bounds, Texture2D texture, int inkLevels)
+        {
+            this.inkLevels = inkLevels;
+            yVelocity = 0;
+            falling = false;
+            X = bounds.X;
+            Y = bounds.Y;
+            Width = bounds.Width;
+            Height = bounds.Height;
+            this.texture = texture;
+        }
 
 		// Methods
 		public void Move(GameTime gameTime)

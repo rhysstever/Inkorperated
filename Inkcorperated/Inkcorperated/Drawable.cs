@@ -11,7 +11,7 @@ namespace Inkcorperated
     class Drawable
     {
         private Rectangle bounds;
-        private Texture2D texture;
+        protected Texture2D texture;
 
         public Rectangle Bounds { get{ return bounds; } }
 
