@@ -38,12 +38,16 @@ namespace Inkcorperated
         private GameStates currentGameState;
 
         private Player player; 
+
         MapController controller;
 		CollisionManager collisionManager;
+
         MouseState previousMouseState;
         KeyboardState previousKeyboardState;
         private MouseState currentMouseState;
         private KeyboardState currentKBState;
+
+        private SpriteFont fontArial16;
 
         public Game1()
 		{
@@ -81,7 +85,8 @@ namespace Inkcorperated
 			spriteBatch = new SpriteBatch(GraphicsDevice);
             controller.LoadLevels(Content.Load<Texture2D>("character"), Content.Load<Texture2D>("block"), null, Content.Load<Texture2D>("goal"));
 			player = controller.LevelPlayer;
-		}
+            fontArial16 = Content.Load<SpriteFont>("fontArial16");
+        }
 
 		/// <summary>
 		/// UnloadContent will be called once per game and is the place to unload
@@ -181,6 +186,21 @@ namespace Inkcorperated
             spriteBatch.Begin();
             switch (currentGameState)
             {
+                case GameStates.MainMenu:
+                    // Writes the title
+                    spriteBatch.DrawString(
+                    fontArial16,
+                    "Inkorporated",
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - 100, GraphicsDevice.Viewport.Height / 4),
+                    Color.White);
+
+                    // Writes the instructions
+                    spriteBatch.DrawString(
+                    fontArial16,
+                    "Hit 'Enter' to Start",
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - 90, (GraphicsDevice.Viewport.Height / 4) + 50),
+                    Color.White);
+                    break;
                 case GameStates.Game:
                     controller.Draw(spriteBatch);
                     break;
