@@ -211,8 +211,8 @@ namespace Inkcorperated
 
                 if (!removed)
                 {
-                    if(player.InkLevels >= customBlocks[customBlocks.Count - 1].Width * customBlocks[customBlocks.Count - 1].Height / 100)
-                        player.InkLevels -= customBlocks[customBlocks.Count - 1].Width * customBlocks[customBlocks.Count - 1].Height / 100;
+                    if(player.InkLevels >= customBlocks[customBlocks.Count - 1].GetInkCost())
+                        player.InkLevels -= customBlocks[customBlocks.Count - 1].GetInkCost();
                     else
                         customBlocks.RemoveAt(customBlocks.Count - 1);
                 }
@@ -246,27 +246,45 @@ namespace Inkcorperated
 
                 //Fixes the values of the one the player is currently drawing so it draws correctly
                 Block fixedBox = new Block(new Rectangle(customBlocks[customBlocks.Count - 1].X, customBlocks[customBlocks.Count - 1].Y, customBlocks[customBlocks.Count - 1].Width, customBlocks[customBlocks.Count - 1].Height), blockTexture, customBlocks[customBlocks.Count - 1].Type);
-                if (fixedBox.Height < 0)
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed && !invalidDrawCheck)
                 {
-                    fixedBox.Y += fixedBox.Height;
-                    fixedBox.Height *= -1;
+                    if (fixedBox.Height < 0)
+                    {
+                        fixedBox.Y += fixedBox.Height;
+                        fixedBox.Height *= -1;
+                    }
+                    if (fixedBox.Width < 0)
+                    {
+                        fixedBox.X += fixedBox.Width;
+                        fixedBox.Width *= -1;
+                    }
+                    switch (fixedBox.Type)
+                    {
+                        case BlockType.Basic:
+                            fixedBox.Draw(batch, player.InkLevels >= customBlocks[customBlocks.Count - 1].GetInkCost() ? Color.Black : new Color(0, 0, 0, 63));
+                            break;
+                        case BlockType.Speed:
+                            fixedBox.Draw(batch, player.InkLevels >= customBlocks[customBlocks.Count - 1].GetInkCost() ? Color.Blue : new Color(0, 0, 255, 63));
+                            break;
+                        case BlockType.Bouncy:
+                            fixedBox.Draw(batch, player.InkLevels >= customBlocks[customBlocks.Count - 1].GetInkCost() ? Color.Red : new Color(255, 0, 0, 63));
+                            break;
+                    }
                 }
-                if (fixedBox.Width < 0)
+                else
                 {
-                    fixedBox.X += fixedBox.Width;
-                    fixedBox.Width *= -1;
-                }
-                switch (fixedBox.Type)
-                {
-                    case BlockType.Basic:
-                        fixedBox.Draw(batch, Color.Black);
-                        break;
-                    case BlockType.Speed:
-                        fixedBox.Draw(batch, Color.Blue);
-                        break;
-                    case BlockType.Bouncy:
-                        fixedBox.Draw(batch, Color.Red);
-                        break;
+                    switch (fixedBox.Type)
+                    {
+                        case BlockType.Basic:
+                            fixedBox.Draw(batch, Color.Black);
+                            break;
+                        case BlockType.Speed:
+                            fixedBox.Draw(batch, Color.Blue);
+                            break;
+                        case BlockType.Bouncy:
+                            fixedBox.Draw(batch, Color.Red);
+                            break;
+                    }
                 }
             }
         }

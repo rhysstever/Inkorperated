@@ -23,5 +23,10 @@ namespace Inkcorperated
         {
             blockType = bType;
         }
+
+        public int GetInkCost()
+        {
+            return Math.Abs(Bounds.Width) * Math.Abs(Bounds.Height) / 100;
+        }
     }
 }
