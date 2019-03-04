@@ -111,10 +111,10 @@ namespace Inkcorperated
 
         public bool NextLevel()
         {
-            currentLevel++;
             //If there is no next level, return a failure
-            if (currentLevel >= levels.Count)
+            if (currentLevel + 1 >= levels.Count)
                 return false;
+            currentLevel++;
             LoadLevel(currentLevel);
             return true;
         }
