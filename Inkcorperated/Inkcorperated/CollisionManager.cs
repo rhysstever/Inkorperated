@@ -41,6 +41,8 @@ namespace Inkcorperated
 
 		public void Colliding()
 		{
+            allBlocks = new List<Block>();
+
 			// Player is always falling, unless otherwise stated
 			controller.LevelPlayer.Falling = true; 
 

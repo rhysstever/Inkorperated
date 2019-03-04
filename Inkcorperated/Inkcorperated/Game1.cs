@@ -139,7 +139,7 @@ namespace Inkcorperated
 				// Handles collisions between the player and all other collidables
 				collisionManager.Colliding();
                 //Handles drawing blocks
-                controller.CheckForRectDraw(previousMouseState);
+                controller.CheckForRectDraw(previousMouseState, GraphicsDevice.Viewport.Bounds);
                 //Handles switching block types
                 controller.CheckBlockTypeChange(previousKeyboardState);
 
