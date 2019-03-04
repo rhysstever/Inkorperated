@@ -23,6 +23,8 @@ namespace Inkcorperated
         Texture2D enemyTexture;
         BlockType selectedType;
 
+        bool invalidDrawCheck;
+
 		// Properties
 		
 		public List<Block> CustomBlocks { get { return customBlocks; } }
@@ -36,6 +38,7 @@ namespace Inkcorperated
             customBlocks = new List<Block>();
             selectedType = BlockType.Basic;
             player = new Player(new Rectangle(), null, 0);
+            invalidDrawCheck = false;
         }
 
         /// <summary>
@@ -141,17 +144,22 @@ namespace Inkcorperated
             return current.IsKeyDown(key) && previous.IsKeyUp(key);
         }
 
-        public void CheckForRectDraw(MouseState previousMouseState)
+        public void CheckForRectDraw(MouseState previousMouseState, Rectangle window)
         {
             MouseState currentState = Mouse.GetState();
             //If the player started clicking this frame
             if (previousMouseState.LeftButton == ButtonState.Released && currentState.LeftButton == ButtonState.Pressed)
             {
+                if (!window.Contains(currentState.Position))
+                {
+                    invalidDrawCheck = true;
+                    return;
+                }
                 customBlocks.Add(new Block(new Rectangle(RoundDownToNearestTen(currentState.X), RoundDownToNearestTen(currentState.Y), 0, 0), blockTexture, selectedType));
             }
 
             //if the player is clicking
-            if (currentState.LeftButton == ButtonState.Pressed)
+            if (currentState.LeftButton == ButtonState.Pressed && !invalidDrawCheck)
             {
                 customBlocks[customBlocks.Count - 1].Width = RoundUpToNearestTen(currentState.X - customBlocks[customBlocks.Count - 1].X);
                 customBlocks[customBlocks.Count - 1].Height = RoundUpToNearestTen(currentState.Y - customBlocks[customBlocks.Count - 1].Y);
@@ -160,18 +168,24 @@ namespace Inkcorperated
             //if the player stopped clicking this frame
             if (previousMouseState.LeftButton == ButtonState.Pressed && currentState.LeftButton == ButtonState.Released)
             {
-                //fixes the values of the newly placed box so collision isn't a pain in the ass
-                if (customBlocks[customBlocks.Count - 1].Height < 0)
+                if (invalidDrawCheck)
                 {
-                    customBlocks[customBlocks.Count - 1].Y += customBlocks[customBlocks.Count - 1].Height;
-                    customBlocks[customBlocks.Count - 1].Height *= -1;
+                    invalidDrawCheck = false;
+                    return;
                 }
+                //fixes the values of the newly placed box so collision isn't a pain in the ass
                 if (customBlocks[customBlocks.Count - 1].Width < 0)
                 {
                     customBlocks[customBlocks.Count - 1].X += customBlocks[customBlocks.Count - 1].Width;
                     customBlocks[customBlocks.Count - 1].Width *= -1;
                 }
+                if (customBlocks[customBlocks.Count - 1].Height < 0)
+                {
+                    customBlocks[customBlocks.Count - 1].Y += customBlocks[customBlocks.Count - 1].Height;
+                    customBlocks[customBlocks.Count - 1].Height *= -1;
+                }
                 bool removed = false;
+
                 //Removes the box if it intersects the player, goal or any other boxes
                 if (customBlocks[customBlocks.Count - 1].Bounds.Intersects(player.Bounds))
                 {
@@ -193,6 +207,8 @@ namespace Inkcorperated
                     removed = true;
                 }
 
+                Console.WriteLine(removed);
+
                 if (!removed)
                 {
                     if(player.InkLevels >= customBlocks[customBlocks.Count - 1].Width * customBlocks[customBlocks.Count - 1].Height / 100)
@@ -200,12 +216,6 @@ namespace Inkcorperated
                     else
                         customBlocks.RemoveAt(customBlocks.Count - 1);
                 }
-            }
-            //Test script for multiple levels
-            if (previousMouseState.RightButton == ButtonState.Released && currentState.RightButton == ButtonState.Pressed)
-            {
-                Console.WriteLine("Switch");
-                NextLevel();
             }
         }
 
@@ -233,6 +243,7 @@ namespace Inkcorperated
                             break;
                     }
                 }
+
                 //Fixes the values of the one the player is currently drawing so it draws correctly
                 Block fixedBox = new Block(new Rectangle(customBlocks[customBlocks.Count - 1].X, customBlocks[customBlocks.Count - 1].Y, customBlocks[customBlocks.Count - 1].Width, customBlocks[customBlocks.Count - 1].Height), blockTexture, customBlocks[customBlocks.Count - 1].Type);
                 if (fixedBox.Height < 0)

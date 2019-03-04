@@ -12,15 +12,6 @@ namespace Inkcorperated
 	/// </summary> 
 
     // Enums to hold finite states
-
-    // This enumerator may not be needed
-    public enum CharacterStates
-    {
-        Jump,
-        Stand,
-        Run
-    }
-
     public enum GameStates
     {
         MainMenu,
@@ -33,8 +24,7 @@ namespace Inkcorperated
 	{
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
-
-        private CharacterStates currentCharaState;
+        
         private GameStates currentGameState;
 
         private Player player; 
@@ -47,7 +37,7 @@ namespace Inkcorperated
         private MouseState currentMouseState;
         private KeyboardState currentKBState;
 
-        private SpriteFont fontArial16;
+        private SpriteFont fontArial;
 
         public Game1()
 		{
@@ -64,8 +54,7 @@ namespace Inkcorperated
 		protected override void Initialize()
 		{
             IsMouseVisible = true;
-
-            currentCharaState = CharacterStates.Stand;
+            
             currentGameState = GameStates.MainMenu;
 
             controller = new MapController();
@@ -83,9 +72,9 @@ namespace Inkcorperated
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-            controller.LoadLevels(Content.Load<Texture2D>("character"), Content.Load<Texture2D>("block"), null, Content.Load<Texture2D>("goal"));
+            controller.LoadLevels(Content.Load<Texture2D>("player_idle"), Content.Load<Texture2D>("block"), null, Content.Load<Texture2D>("goal"));
 			player = controller.LevelPlayer;
-            fontArial16 = Content.Load<SpriteFont>("fontArial16");
+            fontArial = Content.Load<SpriteFont>("fontArial");
         }
 
 		/// <summary>
@@ -107,7 +96,7 @@ namespace Inkcorperated
             currentKBState = Keyboard.GetState();
             currentMouseState = Mouse.GetState();
 
-
+            // ----- Main Menu -----
             if (currentGameState == GameStates.MainMenu)
             {
                 if (SingleKeyPress(Keys.Enter))
@@ -118,6 +107,7 @@ namespace Inkcorperated
                 }
             }
 
+            // ----- Pause Menu -----
             else if (currentGameState == GameStates.PauseMenu)
             {
                 if (SingleKeyPress(Keys.Escape))
@@ -126,7 +116,7 @@ namespace Inkcorperated
                 }
             }
 
-            // Main Game loop
+            // ----- Game -----
             else if (currentGameState == GameStates.Game)
             {
                 if (SingleKeyPress(Keys.Escape))
@@ -144,28 +134,12 @@ namespace Inkcorperated
 				// Handles collisions between the player and all other collidables
 				collisionManager.Colliding();
                 //Handles drawing blocks
-                controller.CheckForRectDraw(previousMouseState);
+                controller.CheckForRectDraw(previousMouseState, GraphicsDevice.Viewport.Bounds);
                 //Handles switching block types
                 controller.CheckBlockTypeChange(previousKeyboardState);
-
-                // This may not actually be needed
-                //if(currentCharaState == CharacterStates.Jump)
-                //{
-
-                //}
-
-                //else if(currentCharaState == CharacterStates.Stand)
-                //{
-
-                //}
-
-                //else if(currentCharaState == CharacterStates.Run)
-                //{
-
-                //}
-
             }
 
+            // ----- Game Over -----
             else if (currentGameState == GameStates.GameOver)
             {
                 if (SingleKeyPress(Keys.Enter))
@@ -194,36 +168,56 @@ namespace Inkcorperated
                 case GameStates.MainMenu:
                     // Writes the title
                     spriteBatch.DrawString(
-                    fontArial16,
+                    fontArial,
                     "Inkorporated",
-                    new Vector2((GraphicsDevice.Viewport.Width / 2) - 100, GraphicsDevice.Viewport.Height / 4),
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Inkorporated").X / 2), GraphicsDevice.Viewport.Height / 4),
                     Color.White);
 
                     // Writes the instructions
                     spriteBatch.DrawString(
-                    fontArial16,
+                    fontArial,
                     "Hit 'Enter' to Start",
-                    new Vector2((GraphicsDevice.Viewport.Width / 2) - 90, (GraphicsDevice.Viewport.Height / 4) + 50),
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Start").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
                     Color.White);
                     break;
+
                 case GameStates.Game:
                     controller.Draw(spriteBatch);
                     break;
+
+                case GameStates.PauseMenu:
+                    GraphicsDevice.Clear(Color.MediumPurple);
+
+                    // Writes 'Paused'
+                    spriteBatch.DrawString(
+                    fontArial,
+                    "Paused",
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Paused").X / 2), GraphicsDevice.Viewport.Height / 4),
+                    Color.White);
+
+                    // Writes the instructions
+                    spriteBatch.DrawString(
+                    fontArial,
+                    "Hit 'Esc' to Return to Game.",
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Esc' to Return to Game").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
+                    Color.White);
+                    break;
+
                 case GameStates.GameOver:
                     GraphicsDevice.Clear(Color.Black);
 
                     // Writes GameOver
                     spriteBatch.DrawString(
-                    fontArial16,
+                    fontArial,
                     "Game Over",
-                    new Vector2((GraphicsDevice.Viewport.Width / 2) - 100, GraphicsDevice.Viewport.Height / 4),
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Game Over").X / 2), GraphicsDevice.Viewport.Height / 4),
                     Color.White);
 
                     // Writes the instructions
                     spriteBatch.DrawString(
-                    fontArial16,
+                    fontArial,
                     "Hit 'Enter' to Return to Main Menu.",
-                    new Vector2((GraphicsDevice.Viewport.Width / 2) - 90, (GraphicsDevice.Viewport.Height / 4) + 50),
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Return to Main Menu").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
                     Color.White);
                     break;
             }
@@ -248,17 +242,6 @@ namespace Inkcorperated
             {
                 return false;
             }
-        }
-        
-        /// <summary>
-        /// Resets the data that needs to be reset to the initial state when the game restarts the level
-        /// </summary>
-        public void ResetGame()
-        {
-            // Ink levels
-            // Spawned in blocks to be removed ---> MapController's LoadLevel* Method?
-            // Monster positions
-            // etc
         }
     }
 }
