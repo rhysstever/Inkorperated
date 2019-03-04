@@ -64,7 +64,7 @@ namespace Inkcorperated
 					Rectangle intersection = Rectangle.Intersect(controller.LevelPlayer.Bounds, block.Bounds);
 
 					// Collision is occuring on top or bottom
-					if (intersection.Width > intersection.Height)
+					if (intersection.Width >= intersection.Height)
 					{
 						// Moves the player up or down away from the block
 						controller.LevelPlayer.Y -= intersection.Height * Math.Sign(block.Bounds.Y - controller.LevelPlayer.Y);
@@ -87,7 +87,8 @@ namespace Inkcorperated
 			// Checks for win condition (if player collides with the goal flag)
 			if(isColliding(controller.LevelPlayer, controller.Goal))
 			{
-				// moves to next level
+				// Progresses to next level
+				// controller.NextLevel();
 			}
 		}
 	}
