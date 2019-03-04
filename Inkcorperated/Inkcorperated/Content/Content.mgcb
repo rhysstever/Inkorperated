@@ -42,7 +42,7 @@
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:fontArial16.spritefont
+/build:fontArial16.spritefont;fontArial.spritefont
 
 #begin goal.png
 /importer:TextureImporter
