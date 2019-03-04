@@ -180,9 +180,11 @@ namespace Inkcorperated
                     new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Start").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
                     Color.White);
                     break;
+
                 case GameStates.Game:
                     controller.Draw(spriteBatch);
                     break;
+
                 case GameStates.PauseMenu:
                     GraphicsDevice.Clear(Color.MediumPurple);
 
@@ -240,17 +242,6 @@ namespace Inkcorperated
             {
                 return false;
             }
-        }
-        
-        /// <summary>
-        /// Resets the data that needs to be reset to the initial state when the game restarts the level
-        /// </summary>
-        public void ResetGame()
-        {
-            // Ink levels
-            // Spawned in blocks to be removed ---> MapController's LoadLevel* Method?
-            // Monster positions
-            // etc
         }
     }
 }
