@@ -144,7 +144,8 @@ namespace Inkcorperated
             {
                 if (SingleKeyPress(Keys.Enter))
                 {
-                    currentGameState = GameStates.MainMenu;
+                    currentGameState = GameStates.Game;
+                    controller.LoadLevel(0);
                 }
             }
             
@@ -216,8 +217,8 @@ namespace Inkcorperated
                     // Writes the instructions
                     spriteBatch.DrawString(
                     fontArial,
-                    "Hit 'Enter' to Return to Main Menu.",
-                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Return to Main Menu").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
+                    "Hit 'Enter' to Return to Try Again.",
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Return to Try Again.").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
                     Color.White);
                     break;
             }
