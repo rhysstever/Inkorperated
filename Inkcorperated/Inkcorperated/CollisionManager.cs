@@ -88,11 +88,7 @@ namespace Inkcorperated
 			if(isColliding(controller.LevelPlayer, controller.Goal))
 			{
 				// Progresses to next level
-				if (controller.NextLevel())
-					controller.NextLevel();
-
-
-
+				controller.NextLevel();
 			}
 		}
 	}
