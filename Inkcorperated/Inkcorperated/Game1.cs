@@ -134,6 +134,11 @@ namespace Inkcorperated
                     currentGameState = GameStates.PauseMenu;
                 }
 
+                if (player.Y > GraphicsDevice.Viewport.Height)
+                {
+                    currentGameState = GameStates.GameOver;
+                }
+
 				// Handles player movement
                 player.Move(gameTime);
 				// Handles collisions between the player and all other collidables
@@ -203,6 +208,23 @@ namespace Inkcorperated
                     break;
                 case GameStates.Game:
                     controller.Draw(spriteBatch);
+                    break;
+                case GameStates.GameOver:
+                    GraphicsDevice.Clear(Color.Black);
+
+                    // Writes GameOver
+                    spriteBatch.DrawString(
+                    fontArial16,
+                    "Game Over",
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - 100, GraphicsDevice.Viewport.Height / 4),
+                    Color.White);
+
+                    // Writes the instructions
+                    spriteBatch.DrawString(
+                    fontArial16,
+                    "Hit 'Enter' to Return to Main Menu.",
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - 90, (GraphicsDevice.Viewport.Height / 4) + 50),
+                    Color.White);
                     break;
             }
             spriteBatch.End();
