@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,31 +54,33 @@ namespace Inkcorperated
 
 			// Adds all drawn blocks and preset blocks to a 
 			// third list of all blocks on the screen
-			allBlocks.AddRange(controller.CustomBlocks);
 			allBlocks.AddRange(controller.GetCurrentMap().MapBlocks);
+			allBlocks.AddRange(controller.CustomBlocks);
 
-			// Checks collisions between the player and each block on the screen
-			foreach (Block block in allBlocks)
+            // Checks collisions between the player and each block on the screen
+            //foreach (Block block in allBlocks)
+            Console.WriteLine(controller.DrawingBlock);
+            for(int i = 0; i < allBlocks.Count - (controller.DrawingBlock ? 1 : 0); i++)
 			{
-				if (controller.LevelPlayer.Bounds.Intersects(block.Bounds))
+				if (controller.LevelPlayer.Bounds.Intersects(allBlocks[i].Bounds))
 				{
-					Rectangle intersection = Rectangle.Intersect(controller.LevelPlayer.Bounds, block.Bounds);
+					Rectangle intersection = Rectangle.Intersect(controller.LevelPlayer.Bounds, allBlocks[i].Bounds);
 
 					// Collision is occuring on top or bottom
 					if (intersection.Width >= intersection.Height)
 					{
 						// Moves the player up or down away from the block
-						controller.LevelPlayer.Y -= intersection.Height * Math.Sign(block.Bounds.Y - controller.LevelPlayer.Y);
+						controller.LevelPlayer.Y -= intersection.Height * Math.Sign(allBlocks[i].Bounds.Y - controller.LevelPlayer.Y);
 						controller.LevelPlayer.YVelocity = 0;
 					}
 					// Collision is occuring on either the right or left
 					else
 					{
 						// Moves the player left or right away from the block
-						controller.LevelPlayer.X -= intersection.Width * Math.Sign(block.Bounds.X - controller.LevelPlayer.X);
+						controller.LevelPlayer.X -= intersection.Width * Math.Sign(allBlocks[i].Bounds.X - controller.LevelPlayer.X);
 					}
 				}
-				else if(block.Bounds.Intersects(bounceCheck) && controller.LevelPlayer.YVelocity >= 0)
+				else if(allBlocks[i].Bounds.Intersects(bounceCheck) && controller.LevelPlayer.YVelocity >= 0)
 				{
 					controller.LevelPlayer.Falling = false;
 					controller.LevelPlayer.YVelocity = 0;

@@ -31,6 +31,7 @@ namespace Inkcorperated
 		public Player LevelPlayer { get { return player; } }
 		public Drawable Goal { get { return goal; } }
 		public List<Bullet> Bullets { get { return bullets; } }
+        public bool DrawingBlock { get { return Mouse.GetState().LeftButton == ButtonState.Pressed && !invalidDrawCheck; } }
 
 		public MapController()
         {
@@ -155,14 +156,14 @@ namespace Inkcorperated
                     invalidDrawCheck = true;
                     return;
                 }
-                customBlocks.Add(new Block(new Rectangle(RoundDownToNearestTen(currentState.X), RoundDownToNearestTen(currentState.Y), 0, 0), blockTexture, selectedType));
+                customBlocks.Add(new Block(new Rectangle(RoundDownToNearestTwenty(currentState.X), RoundDownToNearestTwenty(currentState.Y), 0, 0), blockTexture, selectedType));
             }
 
             //if the player is clicking
-            if (currentState.LeftButton == ButtonState.Pressed && !invalidDrawCheck)
+            if (DrawingBlock)
             {
-                customBlocks[customBlocks.Count - 1].Width = RoundUpToNearestTen(currentState.X - customBlocks[customBlocks.Count - 1].X);
-                customBlocks[customBlocks.Count - 1].Height = RoundUpToNearestTen(currentState.Y - customBlocks[customBlocks.Count - 1].Y);
+                customBlocks[customBlocks.Count - 1].Width = RoundUpToNearestTwenty(currentState.X - customBlocks[customBlocks.Count - 1].X);
+                customBlocks[customBlocks.Count - 1].Height = RoundUpToNearestTwenty(currentState.Y - customBlocks[customBlocks.Count - 1].Y);
             }
 
             //if the player stopped clicking this frame
@@ -301,17 +302,17 @@ namespace Inkcorperated
         /// <summary>
         /// Rounds upwards to the nearest ten
         /// </summary>
-        private int RoundUpToNearestTen(int i)
+        private int RoundUpToNearestTwenty(int i)
         {
-            return Math.Sign(i) * (int)Math.Ceiling(Math.Abs(i / 10.0)) * 10;
+            return Math.Sign(i) * (int)Math.Ceiling(Math.Abs(i / 20.0)) * 20;
         }
 
         /// <summary>
         /// Rounds downward to the nearest ten
         /// </summary>
-        private int RoundDownToNearestTen(int i)
+        private int RoundDownToNearestTwenty(int i)
         {
-            return Math.Sign(i) * (int)Math.Floor(Math.Abs(i / 10.0)) * 10;
+            return Math.Sign(i) * (int)Math.Floor(Math.Abs(i / 20.0)) * 20;
         }
     }
 }
