@@ -12,9 +12,14 @@ namespace Inkcorperated
     {
         private int bulletDamage;
         private Entity team;
-        public Bullet(Rectangle bounds, Texture2D texture, Entity _team) : base(bounds, texture)
+        private int direction;
+
+        public int Direction{ get{ return direction; } }
+
+        public Bullet(Rectangle bounds, Texture2D texture, Entity _team, int direction) : base(bounds, texture)
         {
             bulletDamage = 1;
+            this.direction = direction;
             team = _team; //Need to figure out how to deal with team
         }
     }

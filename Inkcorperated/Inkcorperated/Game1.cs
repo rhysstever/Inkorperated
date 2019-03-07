@@ -16,8 +16,10 @@ namespace Inkcorperated
     {
         MainMenu,
         PauseMenu,
+        Options,
         Game,
-        GameOver
+        GameOver,
+        GameWon
     }
     
 	public class Game1 : Game
