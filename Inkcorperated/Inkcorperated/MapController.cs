@@ -63,8 +63,40 @@ namespace Inkcorperated
             //Sets up the goal to have the goal texture
             goal = new Drawable(new Rectangle(), goalTexture);
 
-            StreamReader reader = new StreamReader("../../../../Content/Levels.txt");
-            int amtOfLevels = int.Parse(reader.ReadLine());
+            for(int i = 1; i < i + 1; i++)
+            {
+                try
+                {
+                    Stream inStream = File.OpenRead("../../../../Content/Level" + i + ".level");
+                    BinaryReader file = new BinaryReader(inStream);
+                    Map newMap = new Map(file.ReadInt32());
+                    int value;
+                    for (int y = 0; y < 24; y++)
+                    {
+                        for (int x = 0; x < 40; x++)
+                        {
+                            value = file.ReadInt32();
+                            if (value == 1)
+                                newMap.AddBlock(new Block(new Rectangle(x * 20, y * 20, 20, 20), blockTexture, BlockType.Basic));
+                            else if (value == 2)
+                                newMap.AddBlock(new Block(new Rectangle(x * 20, y * 20, 20, 20), blockTexture, BlockType.Speed));
+                            else if (value == 3)
+                                newMap.AddBlock(new Block(new Rectangle(x * 20, y * 20, 20, 20), blockTexture, BlockType.Bouncy));
+                            else if (value == 4)
+                                newMap.PlayerStart = new Rectangle(x * 20, y * 20, 20, 20);
+                            else if (value == 5)
+                                newMap.Goal = new Rectangle(x * 20, y * 20, 20, 20);
+                        }
+                    }
+                    levels.Add(newMap);
+                    file.Close();
+                }
+                catch
+                {
+                    break;
+                }
+            }
+            /*
             //For the amount of levels that need to be loaded
             for (int i = 0; i < amtOfLevels; i++)
             {
@@ -87,6 +119,7 @@ namespace Inkcorperated
                 levels.Add(newMap);
             }
             reader.Close();
+            */
         }
 
         public void LoadLevel(int level)
@@ -207,8 +240,6 @@ namespace Inkcorperated
                     customBlocks.RemoveAt(customBlocks.Count - 1);
                     removed = true;
                 }
-
-                Console.WriteLine(removed);
 
                 if (!removed)
                 {
