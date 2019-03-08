@@ -99,7 +99,8 @@ namespace LevelEditor
         {
             Stream outStream = File.OpenWrite(path);
             BinaryWriter file = new BinaryWriter(outStream);
-            file.Write(InkLimit.Value);
+            file.Flush();
+            file.Write((int)InkLimit.Value);
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -142,8 +143,7 @@ namespace LevelEditor
                 for (int x = 0; x < width; x++)
                 {
                     value = file.ReadInt32();
-                    visualMap[x, y].BackgroundImage = null;
-                    visualMap[x, y].BackColor = Color.Transparent;
+                    Console.Write(value);
                     if (value == 1)
                         visualMap[x, y].BackColor = Color.Black;
                     else if (value == 2)
