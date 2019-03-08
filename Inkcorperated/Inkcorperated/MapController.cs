@@ -21,6 +21,8 @@ namespace Inkcorperated
         Texture2D playerTexture;
         Texture2D blockTexture;
         Texture2D enemyTexture;
+        Drawable inkContainer;
+        Drawable inkFill;
         BlockType selectedType;
 
         bool invalidDrawCheck;
@@ -55,11 +57,14 @@ namespace Inkcorperated
         /// amtOfEnemies                                        Should be 0 until enemies are made  |
         /// enemyX enemyY enemyWidth enemyHeight                --repeat for amtOfEnemies           |
         /// </summary>
-        public void LoadLevels(Texture2D playerTexture, Texture2D blockTexture, Texture2D enemyTexture, Texture2D goalTexture)
+        public void LoadLevels(Texture2D playerTexture, Texture2D blockTexture, Texture2D enemyTexture, Texture2D goalTexture,
+            Texture2D inkContainerTexture, Texture2D inkFillTexture)
         {
             this.playerTexture = playerTexture;
             this.blockTexture = blockTexture;
             this.enemyTexture = enemyTexture;
+            inkContainer = new Drawable(new Rectangle(400, 30, 2, 2), inkContainerTexture);
+            inkFill = new Drawable(new Rectangle(20, 20, 10, 50), inkFillTexture);
             //Sets up the goal to have the goal texture
             goal = new Drawable(new Rectangle(), goalTexture);
 
@@ -256,6 +261,27 @@ namespace Inkcorperated
             levels[currentLevel].Draw(batch);
             goal.Draw(batch, Color.White);
             player.Draw(batch, Color.White);
+
+            /* Ink level bar not functional yet
+            switch (selectedType)
+            {
+                case BlockType.Basic:
+                    inkFill.Draw(batch, Color.Black);
+                    inkContainer.Draw(batch, Color.White);
+                    break;
+                case BlockType.Speed:
+                    inkFill.Draw(batch, Color.Blue);
+                    inkContainer.Draw(batch, Color.White);
+                    break;
+                case BlockType.Bouncy:
+                    inkFill.Draw(batch, Color.Red);
+                    inkContainer.Draw(batch, Color.White);
+                    break;
+                default:
+                    inkFill.Draw(batch, Color.Black);
+                    inkContainer.Draw(batch, Color.White);
+                    break;
+            }*/
 
             if (customBlocks.Count > 0)
             {
