@@ -44,11 +44,9 @@ namespace LevelEditor
             width = x;
             height = y;
             creator = mainForm;
-            player = Image.FromFile("player_idle.png");
-            goal = Image.FromFile("goal.png");
             InitializeComponent();
-            Player.BackgroundImage = player;
-            Goal.BackgroundImage = goal;
+            player = Player.BackgroundImage;
+            goal = Goal.BackgroundImage;
             GenerateTiles();
         }
 
@@ -57,11 +55,9 @@ namespace LevelEditor
             width = 40;
             height = 24;
             creator = mainForm;
-            player = Image.FromFile("player_idle.png");
-            goal = Image.FromFile("goal.png");
             InitializeComponent();
-            Player.BackgroundImage = player;
-            Goal.BackgroundImage = goal;
+            player = Player.BackgroundImage;
+            goal = Goal.BackgroundImage;
             LoadLevel(path);
         }
 
