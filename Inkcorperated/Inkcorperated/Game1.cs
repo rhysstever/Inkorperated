@@ -140,6 +140,9 @@ namespace Inkcorperated
 				collisionManager.Colliding();
                 //Handles switching block types
                 controller.CheckBlockTypeChange(previousKeyboardState);
+                //Restarts the level if the player wants to
+                if (SingleKeyPress(Keys.R))
+                    controller.ResetLevel();
             }
 
             // ----- Game Over -----

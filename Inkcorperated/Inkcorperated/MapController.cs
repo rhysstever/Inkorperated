@@ -132,6 +132,7 @@ namespace Inkcorperated
             currentLevel = level;
             //Clears all of the player-drawn blocks
             customBlocks.Clear();
+            selectedType = BlockType.Basic;
             //Updates the player position and size
             player.UpdatePlayer(levels[currentLevel].PlayerStart, playerTexture, levels[currentLevel].InkLimit);
             //Changes the position and size of the goal to match the new level's
@@ -202,6 +203,10 @@ namespace Inkcorperated
             {
                 customBlocks[customBlocks.Count - 1].Width = RoundUpToNearestTwenty(currentState.X - customBlocks[customBlocks.Count - 1].X);
                 customBlocks[customBlocks.Count - 1].Height = RoundUpToNearestTwenty(currentState.Y - customBlocks[customBlocks.Count - 1].Y);
+                if(currentState.RightButton == ButtonState.Pressed){
+                    invalidDrawCheck = true;
+                    customBlocks.RemoveAt(customBlocks.Count - 1);
+                }
             }
 
             //if the player stopped clicking this frame
