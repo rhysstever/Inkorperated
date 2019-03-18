@@ -21,9 +21,11 @@ namespace Inkcorperated
         Texture2D playerTexture;
         Texture2D blockTexture;
         Texture2D enemyTexture;
+        Texture2D background;
         Drawable inkContainer;
         Drawable inkFill;
         BlockType selectedType;
+        GraphicsDeviceManager graphics;
 
         bool invalidDrawCheck;
 
@@ -35,13 +37,14 @@ namespace Inkcorperated
 		public List<Bullet> Bullets { get { return bullets; } }
         public bool DrawingBlock { get { return Mouse.GetState().LeftButton == ButtonState.Pressed && !invalidDrawCheck; } }
 
-		public MapController()
+		public MapController(GraphicsDeviceManager graphics)
         {
             levels = new List<Map>();
             customBlocks = new List<Block>();
             selectedType = BlockType.Basic;
             player = new Player(new Rectangle(), null, 0);
             invalidDrawCheck = false;
+            this.graphics = graphics;
         }
 
         /// <summary>
@@ -58,11 +61,12 @@ namespace Inkcorperated
         /// enemyX enemyY enemyWidth enemyHeight                --repeat for amtOfEnemies           |
         /// </summary>
         public void LoadLevels(Texture2D playerTexture, Texture2D blockTexture, Texture2D enemyTexture, Texture2D goalTexture,
-            Texture2D inkContainerTexture, Texture2D inkFillTexture)
+            Texture2D inkContainerTexture, Texture2D inkFillTexture, Texture2D bgPic)
         {
             this.playerTexture = playerTexture;
             this.blockTexture = blockTexture;
             this.enemyTexture = enemyTexture;
+            background = bgPic;
             inkContainer = new Drawable(new Rectangle(400, 30, 2, 2), inkContainerTexture);
             inkFill = new Drawable(new Rectangle(20, 20, 10, 50), inkFillTexture);
             //Sets up the goal to have the goal texture
@@ -263,6 +267,7 @@ namespace Inkcorperated
 
         public void Draw(SpriteBatch batch)
         {
+            batch.Draw(background, new Rectangle(0, 0, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Color.White);
             levels[currentLevel].Draw(batch);
             goal.Draw(batch, Color.White);
             player.Draw(batch, Color.White);
