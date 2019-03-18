@@ -65,9 +65,10 @@ namespace Inkcorperated
 				if (controller.LevelPlayer.Bounds.Intersects(allBlocks[i].Bounds))
 				{
 					Rectangle intersection = Rectangle.Intersect(controller.LevelPlayer.Bounds, allBlocks[i].Bounds);
+                    KeyboardState kbState = Keyboard.GetState();
 
-					// Collision is occuring on top or bottom
-					if (intersection.Width >= intersection.Height)
+                    // Collision is occuring on top or bottom
+                    if (intersection.Width >= intersection.Height)
 					{
 						// Moves the player up or down away from the block
 						controller.LevelPlayer.Y -= intersection.Height * Math.Sign(allBlocks[i].Bounds.Y - controller.LevelPlayer.Y);
@@ -79,6 +80,13 @@ namespace Inkcorperated
 						// Moves the player left or right away from the block
 						controller.LevelPlayer.X -= intersection.Width * Math.Sign(allBlocks[i].Bounds.X - controller.LevelPlayer.X);
 					}
+
+                    // Handling block types...
+                    if(kbState.IsKeyDown(Keys.W) && !controller.LevelPlayer.Falling && allBlocks[i].Type == BlockType.Bouncy)
+                    {
+                        controller.LevelPlayer.YVelocity *= 2;
+                        controller.LevelPlayer.Falling = true;
+                    }
 				}
 				else if(allBlocks[i].Bounds.Intersects(bounceCheck) && controller.LevelPlayer.YVelocity >= 0)
 				{
