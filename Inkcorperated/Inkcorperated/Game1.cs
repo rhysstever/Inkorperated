@@ -99,66 +99,70 @@ namespace Inkcorperated
             currentKBState = Keyboard.GetState();
             currentMouseState = Mouse.GetState();
 
-            // ----- Main Menu -----
-            if (currentGameState == GameStates.MainMenu)
-            {
-                if (SingleKeyPress(Keys.Enter))
-                {
-                    currentGameState = GameStates.Game;
-                    controller.LoadLevel(0);
-                    //ResetGame();
-                }
-            }
+			switch(currentGameState)
+			{
+				case GameStates.MainMenu:
+					if (SingleKeyPress(Keys.Enter))
+					{
+						currentGameState = GameStates.Game;
+						controller.LoadLevel(0);
+						//ResetGame();
+					}
 
-            // ----- Pause Menu -----
-            else if (currentGameState == GameStates.PauseMenu)
-            {
-                if (SingleKeyPress(Keys.Escape))
-                {
-                    currentGameState = GameStates.Game;
-                }
-            }
+					break;
+				case GameStates.Options:
 
-            // ----- Game -----
-            else if (currentGameState == GameStates.Game)
-            {
-                if (SingleKeyPress(Keys.Escape))
-                {
-                    currentGameState = GameStates.PauseMenu;
-                }
 
-                if (player.Y > GraphicsDevice.Viewport.Height)
-                {
-                    currentGameState = GameStates.GameOver;
-                }
+					break;
+				case GameStates.Game:
+					if (SingleKeyPress(Keys.Escape))
+					{
+						currentGameState = GameStates.PauseMenu;
+					}
 
-				// Handles player movement
-                player.Move(gameTime);
-                //Handles drawing blocks
-                controller.CheckForRectDraw(previousMouseState, GraphicsDevice.Viewport.Bounds);
-                //Moves all of the bullets
-                foreach(Bullet b in controller.Bullets)
-                {
-                    b.X += b.Direction;
-                }
-				// Handles collisions between the player and all other collidables
-				collisionManager.Colliding();
-                //Handles switching block types
-                controller.CheckBlockTypeChange(previousKeyboardState);
-                //Restarts the level if the player wants to
-                if (SingleKeyPress(Keys.R))
-                    controller.ResetLevel();
-            }
+					if (player.Y > GraphicsDevice.Viewport.Height)
+					{
+						currentGameState = GameStates.GameOver;
+					}
 
-            // ----- Game Over -----
-            else if (currentGameState == GameStates.GameOver)
-            {
-                if (SingleKeyPress(Keys.Enter))
-                {
-                    currentGameState = GameStates.Game;
-                    controller.LoadLevel(0);
-                }
-            }
+					// Handles player movement
+					player.Move(gameTime);
+					//Handles drawing blocks
+					controller.CheckForRectDraw(previousMouseState, GraphicsDevice.Viewport.Bounds);
+					//Moves all of the bullets
+					foreach (Bullet b in controller.Bullets)
+					{
+						b.X += b.Direction;
+					}
+					// Handles collisions between the player and all other collidables
+					collisionManager.Colliding();
+					//Handles switching block types
+					controller.CheckBlockTypeChange(previousKeyboardState);
+					//Restarts the level if the player wants to
+					if (SingleKeyPress(Keys.R))
+						controller.ResetLevel();
+
+					break;
+				case GameStates.PauseMenu:
+					if (SingleKeyPress(Keys.Escape))
+					{
+						currentGameState = GameStates.Game;
+					}
+
+					break;
+				case GameStates.GameOver:
+					if (SingleKeyPress(Keys.Enter))
+					{
+						currentGameState = GameStates.Game;
+						controller.LoadLevel(0);
+					}
+
+					break;
+				case GameStates.GameWon:
+
+
+					break;
+			}
             
             previousKeyboardState = currentKBState;
             previousMouseState = currentMouseState;
