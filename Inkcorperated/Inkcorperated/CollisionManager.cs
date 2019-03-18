@@ -59,7 +59,7 @@ namespace Inkcorperated
 
             // Checks collisions between the player and each block on the screen
             //foreach (Block block in allBlocks)
-            Console.WriteLine(controller.DrawingBlock);
+            //Console.WriteLine(controller.DrawingBlock);
             for(int i = 0; i < allBlocks.Count - (controller.DrawingBlock ? 1 : 0); i++)
 			{
 				if (controller.LevelPlayer.Bounds.Intersects(allBlocks[i].Bounds))
