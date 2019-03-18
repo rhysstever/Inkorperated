@@ -43,6 +43,7 @@ namespace Inkcorperated
             customBlocks = new List<Block>();
             selectedType = BlockType.Basic;
             player = new Player(new Rectangle(), null, 0);
+            bullets = new List<Bullet>();
             invalidDrawCheck = false;
             this.graphics = graphics;
         }
