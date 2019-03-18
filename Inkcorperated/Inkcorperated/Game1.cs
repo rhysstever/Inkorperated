@@ -106,14 +106,13 @@ namespace Inkcorperated
 					{
 						currentGameState = GameStates.Game;
 						controller.LoadLevel(0);
-						//ResetGame();
 					}
-
 					break;
+
 				case GameStates.Options:
-
-
+					
 					break;
+
 				case GameStates.Game:
 					if (SingleKeyPress(Keys.Escape))
 					{
@@ -141,15 +140,15 @@ namespace Inkcorperated
 					//Restarts the level if the player wants to
 					if (SingleKeyPress(Keys.R))
 						controller.ResetLevel();
-
 					break;
+
 				case GameStates.PauseMenu:
 					if (SingleKeyPress(Keys.Escape))
 					{
 						currentGameState = GameStates.Game;
 					}
-
 					break;
+
 				case GameStates.GameOver:
 					if (SingleKeyPress(Keys.Enter))
 					{
@@ -157,10 +156,17 @@ namespace Inkcorperated
 						controller.LoadLevel(0);
 					}
 
+					if(collisionManager.isColliding(controller.LevelPlayer, controller.Goal))
+						if(!controller.NextLevel())
+							currentGameState = GameStates.GameWon;
+
 					break;
+
 				case GameStates.GameWon:
-
-
+					if (SingleKeyPress(Keys.Enter))
+					{
+						currentGameState = GameStates.MainMenu;
+					}
 					break;
 			}
             
@@ -236,6 +242,23 @@ namespace Inkcorperated
                     new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Return to Try Again.").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
                     Color.White);
                     break;
+				case GameStates.GameWon:
+					GraphicsDevice.Clear(Color.Black);
+
+					// Writes GameWon
+					spriteBatch.DrawString(
+					fontArial,
+					"Game Won",
+					new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Game Won").X / 2), GraphicsDevice.Viewport.Height / 4),
+					Color.White);
+
+					// Writes the instructions
+					spriteBatch.DrawString(
+					fontArial,
+					"Hit 'Enter' to Return to the Main Menu.",
+					new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Return to the Main Menu.").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
+					Color.White);
+					break;
             }
             spriteBatch.End();
 
