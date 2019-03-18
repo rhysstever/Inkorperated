@@ -18,6 +18,7 @@ namespace Inkcorperated
 		private bool falling;
 		private const int GRAVITY = 1;
 		private const int SPEED = 2;
+        private bool facingRight;
 
 		// Properties
 
@@ -47,6 +48,7 @@ namespace Inkcorperated
 			this.inkLevels = inkLevels; // starting value of ink (can be changed for balancing)
 			yVelocity = 0;
 			falling = false;
+            facingRight = true;
         }
 
         /// <summary>
@@ -73,10 +75,12 @@ namespace Inkcorperated
 			if(kbState.IsKeyDown(Keys.D))
 			{
 				X += SPEED;
+                facingRight = true;
 			}
 			else if(kbState.IsKeyDown(Keys.A))
 			{
 				X -= SPEED;
+                facingRight = false;
 			}
 			
 			// Falling
@@ -97,5 +101,14 @@ namespace Inkcorperated
 				falling = true;
 			}
 		}
+
+        //A new Draw method for the player. Flips based on if the A or D button is pressed
+        public new void Draw(SpriteBatch batch, Color c)
+        {
+            if (!facingRight)
+                batch.Draw(texture, Bounds, null, Color.White, 0.0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0.0f);
+            else
+                batch.Draw(texture, Bounds, Color.White);
+        }
     }
 }
