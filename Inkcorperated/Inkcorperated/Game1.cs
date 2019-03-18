@@ -16,8 +16,10 @@ namespace Inkcorperated
     {
         MainMenu,
         PauseMenu,
+        Options,
         Game,
-        GameOver
+        GameOver,
+        GameWon
     }
     
 	public class Game1 : Game
@@ -72,7 +74,8 @@ namespace Inkcorperated
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-            controller.LoadLevels(Content.Load<Texture2D>("player_idle"), Content.Load<Texture2D>("block"), null, Content.Load<Texture2D>("goal"));
+            controller.LoadLevels(Content.Load<Texture2D>("player_idle"), Content.Load<Texture2D>("block"), null, Content.Load<Texture2D>("goal"),
+                Content.Load<Texture2D>("Ink Bar"), Content.Load<Texture2D>("Ink Fill"));
 			player = controller.LevelPlayer;
             fontArial = Content.Load<SpriteFont>("fontArial");
         }
@@ -131,12 +134,15 @@ namespace Inkcorperated
 
 				// Handles player movement
                 player.Move(gameTime);
-				// Handles collisions between the player and all other collidables
-				collisionManager.Colliding();
                 //Handles drawing blocks
                 controller.CheckForRectDraw(previousMouseState, GraphicsDevice.Viewport.Bounds);
+				// Handles collisions between the player and all other collidables
+				collisionManager.Colliding();
                 //Handles switching block types
                 controller.CheckBlockTypeChange(previousKeyboardState);
+                //Restarts the level if the player wants to
+                if (SingleKeyPress(Keys.R))
+                    controller.ResetLevel();
             }
 
             // ----- Game Over -----
@@ -144,7 +150,8 @@ namespace Inkcorperated
             {
                 if (SingleKeyPress(Keys.Enter))
                 {
-                    currentGameState = GameStates.MainMenu;
+                    currentGameState = GameStates.Game;
+                    controller.LoadLevel(0);
                 }
             }
             
@@ -216,8 +223,8 @@ namespace Inkcorperated
                     // Writes the instructions
                     spriteBatch.DrawString(
                     fontArial,
-                    "Hit 'Enter' to Return to Main Menu.",
-                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Return to Main Menu").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
+                    "Hit 'Enter' to Return to Try Again.",
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Return to Try Again.").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
                     Color.White);
                     break;
             }

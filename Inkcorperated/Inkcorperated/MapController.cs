@@ -21,6 +21,8 @@ namespace Inkcorperated
         Texture2D playerTexture;
         Texture2D blockTexture;
         Texture2D enemyTexture;
+        Drawable inkContainer;
+        Drawable inkFill;
         BlockType selectedType;
 
         bool invalidDrawCheck;
@@ -31,6 +33,7 @@ namespace Inkcorperated
 		public Player LevelPlayer { get { return player; } }
 		public Drawable Goal { get { return goal; } }
 		public List<Bullet> Bullets { get { return bullets; } }
+        public bool DrawingBlock { get { return Mouse.GetState().LeftButton == ButtonState.Pressed && !invalidDrawCheck; } }
 
 		public MapController()
         {
@@ -54,16 +57,51 @@ namespace Inkcorperated
         /// amtOfEnemies                                        Should be 0 until enemies are made  |
         /// enemyX enemyY enemyWidth enemyHeight                --repeat for amtOfEnemies           |
         /// </summary>
-        public void LoadLevels(Texture2D playerTexture, Texture2D blockTexture, Texture2D enemyTexture, Texture2D goalTexture)
+        public void LoadLevels(Texture2D playerTexture, Texture2D blockTexture, Texture2D enemyTexture, Texture2D goalTexture,
+            Texture2D inkContainerTexture, Texture2D inkFillTexture)
         {
             this.playerTexture = playerTexture;
             this.blockTexture = blockTexture;
             this.enemyTexture = enemyTexture;
+            inkContainer = new Drawable(new Rectangle(400, 30, 2, 2), inkContainerTexture);
+            inkFill = new Drawable(new Rectangle(20, 20, 10, 50), inkFillTexture);
             //Sets up the goal to have the goal texture
             goal = new Drawable(new Rectangle(), goalTexture);
 
-            StreamReader reader = new StreamReader("../../../../Content/Levels.txt");
-            int amtOfLevels = int.Parse(reader.ReadLine());
+            for(int i = 1; i < i + 1; i++)
+            {
+                try
+                {
+                    Stream inStream = File.OpenRead("../../../../Content/Level" + i + ".level");
+                    BinaryReader file = new BinaryReader(inStream);
+                    Map newMap = new Map(file.ReadInt32());
+                    int value;
+                    for (int y = 0; y < 24; y++)
+                    {
+                        for (int x = 0; x < 40; x++)
+                        {
+                            value = file.ReadInt32();
+                            if (value == 1)
+                                newMap.AddBlock(new Block(new Rectangle(x * 20, y * 20, 20, 20), blockTexture, BlockType.Basic));
+                            else if (value == 2)
+                                newMap.AddBlock(new Block(new Rectangle(x * 20, y * 20, 20, 20), blockTexture, BlockType.Speed));
+                            else if (value == 3)
+                                newMap.AddBlock(new Block(new Rectangle(x * 20, y * 20, 20, 20), blockTexture, BlockType.Bouncy));
+                            else if (value == 4)
+                                newMap.PlayerStart = new Rectangle(x * 20, y * 20, 20, 20);
+                            else if (value == 5)
+                                newMap.Goal = new Rectangle(x * 20, y * 20, 20, 20);
+                        }
+                    }
+                    levels.Add(newMap);
+                    file.Close();
+                }
+                catch
+                {
+                    break;
+                }
+            }
+            /*
             //For the amount of levels that need to be loaded
             for (int i = 0; i < amtOfLevels; i++)
             {
@@ -86,6 +124,7 @@ namespace Inkcorperated
                 levels.Add(newMap);
             }
             reader.Close();
+            */
         }
 
         public void LoadLevel(int level)
@@ -93,6 +132,7 @@ namespace Inkcorperated
             currentLevel = level;
             //Clears all of the player-drawn blocks
             customBlocks.Clear();
+            selectedType = BlockType.Basic;
             //Updates the player position and size
             player.UpdatePlayer(levels[currentLevel].PlayerStart, playerTexture, levels[currentLevel].InkLimit);
             //Changes the position and size of the goal to match the new level's
@@ -155,14 +195,18 @@ namespace Inkcorperated
                     invalidDrawCheck = true;
                     return;
                 }
-                customBlocks.Add(new Block(new Rectangle(RoundDownToNearestTen(currentState.X), RoundDownToNearestTen(currentState.Y), 0, 0), blockTexture, selectedType));
+                customBlocks.Add(new Block(new Rectangle(RoundDownToNearestTwenty(currentState.X), RoundDownToNearestTwenty(currentState.Y), 0, 0), blockTexture, selectedType));
             }
 
             //if the player is clicking
-            if (currentState.LeftButton == ButtonState.Pressed && !invalidDrawCheck)
+            if (DrawingBlock)
             {
-                customBlocks[customBlocks.Count - 1].Width = RoundUpToNearestTen(currentState.X - customBlocks[customBlocks.Count - 1].X);
-                customBlocks[customBlocks.Count - 1].Height = RoundUpToNearestTen(currentState.Y - customBlocks[customBlocks.Count - 1].Y);
+                customBlocks[customBlocks.Count - 1].Width = RoundUpToNearestTwenty(currentState.X - customBlocks[customBlocks.Count - 1].X);
+                customBlocks[customBlocks.Count - 1].Height = RoundUpToNearestTwenty(currentState.Y - customBlocks[customBlocks.Count - 1].Y);
+                if(currentState.RightButton == ButtonState.Pressed){
+                    invalidDrawCheck = true;
+                    customBlocks.RemoveAt(customBlocks.Count - 1);
+                }
             }
 
             //if the player stopped clicking this frame
@@ -207,12 +251,10 @@ namespace Inkcorperated
                     removed = true;
                 }
 
-                Console.WriteLine(removed);
-
                 if (!removed)
                 {
-                    if(player.InkLevels >= customBlocks[customBlocks.Count - 1].Width * customBlocks[customBlocks.Count - 1].Height / 100)
-                        player.InkLevels -= customBlocks[customBlocks.Count - 1].Width * customBlocks[customBlocks.Count - 1].Height / 100;
+                    if(player.InkLevels >= customBlocks[customBlocks.Count - 1].GetInkCost())
+                        player.InkLevels -= customBlocks[customBlocks.Count - 1].GetInkCost();
                     else
                         customBlocks.RemoveAt(customBlocks.Count - 1);
                 }
@@ -224,6 +266,27 @@ namespace Inkcorperated
             levels[currentLevel].Draw(batch);
             goal.Draw(batch, Color.White);
             player.Draw(batch, Color.White);
+
+            /* Ink level bar not functional yet
+            switch (selectedType)
+            {
+                case BlockType.Basic:
+                    inkFill.Draw(batch, Color.Black);
+                    inkContainer.Draw(batch, Color.White);
+                    break;
+                case BlockType.Speed:
+                    inkFill.Draw(batch, Color.Blue);
+                    inkContainer.Draw(batch, Color.White);
+                    break;
+                case BlockType.Bouncy:
+                    inkFill.Draw(batch, Color.Red);
+                    inkContainer.Draw(batch, Color.White);
+                    break;
+                default:
+                    inkFill.Draw(batch, Color.Black);
+                    inkContainer.Draw(batch, Color.White);
+                    break;
+            }*/
 
             if (customBlocks.Count > 0)
             {
@@ -246,27 +309,45 @@ namespace Inkcorperated
 
                 //Fixes the values of the one the player is currently drawing so it draws correctly
                 Block fixedBox = new Block(new Rectangle(customBlocks[customBlocks.Count - 1].X, customBlocks[customBlocks.Count - 1].Y, customBlocks[customBlocks.Count - 1].Width, customBlocks[customBlocks.Count - 1].Height), blockTexture, customBlocks[customBlocks.Count - 1].Type);
-                if (fixedBox.Height < 0)
+                if (Mouse.GetState().LeftButton == ButtonState.Pressed && !invalidDrawCheck)
                 {
-                    fixedBox.Y += fixedBox.Height;
-                    fixedBox.Height *= -1;
+                    if (fixedBox.Height < 0)
+                    {
+                        fixedBox.Y += fixedBox.Height;
+                        fixedBox.Height *= -1;
+                    }
+                    if (fixedBox.Width < 0)
+                    {
+                        fixedBox.X += fixedBox.Width;
+                        fixedBox.Width *= -1;
+                    }
+                    switch (fixedBox.Type)
+                    {
+                        case BlockType.Basic:
+                            fixedBox.Draw(batch, player.InkLevels >= customBlocks[customBlocks.Count - 1].GetInkCost() ? Color.Black : new Color(0, 0, 0, 63));
+                            break;
+                        case BlockType.Speed:
+                            fixedBox.Draw(batch, player.InkLevels >= customBlocks[customBlocks.Count - 1].GetInkCost() ? Color.Blue : new Color(0, 0, 255, 63));
+                            break;
+                        case BlockType.Bouncy:
+                            fixedBox.Draw(batch, player.InkLevels >= customBlocks[customBlocks.Count - 1].GetInkCost() ? Color.Red : new Color(255, 0, 0, 63));
+                            break;
+                    }
                 }
-                if (fixedBox.Width < 0)
+                else
                 {
-                    fixedBox.X += fixedBox.Width;
-                    fixedBox.Width *= -1;
-                }
-                switch (fixedBox.Type)
-                {
-                    case BlockType.Basic:
-                        fixedBox.Draw(batch, Color.Black);
-                        break;
-                    case BlockType.Speed:
-                        fixedBox.Draw(batch, Color.Blue);
-                        break;
-                    case BlockType.Bouncy:
-                        fixedBox.Draw(batch, Color.Red);
-                        break;
+                    switch (fixedBox.Type)
+                    {
+                        case BlockType.Basic:
+                            fixedBox.Draw(batch, Color.Black);
+                            break;
+                        case BlockType.Speed:
+                            fixedBox.Draw(batch, Color.Blue);
+                            break;
+                        case BlockType.Bouncy:
+                            fixedBox.Draw(batch, Color.Red);
+                            break;
+                    }
                 }
             }
         }
@@ -283,17 +364,17 @@ namespace Inkcorperated
         /// <summary>
         /// Rounds upwards to the nearest ten
         /// </summary>
-        private int RoundUpToNearestTen(int i)
+        private int RoundUpToNearestTwenty(int i)
         {
-            return Math.Sign(i) * (int)Math.Ceiling(Math.Abs(i / 10.0)) * 10;
+            return Math.Sign(i) * (int)Math.Ceiling(Math.Abs(i / 20.0)) * 20;
         }
 
         /// <summary>
         /// Rounds downward to the nearest ten
         /// </summary>
-        private int RoundDownToNearestTen(int i)
+        private int RoundDownToNearestTwenty(int i)
         {
-            return Math.Sign(i) * (int)Math.Floor(Math.Abs(i / 10.0)) * 10;
+            return Math.Sign(i) * (int)Math.Floor(Math.Abs(i / 20.0)) * 20;
         }
     }
 }

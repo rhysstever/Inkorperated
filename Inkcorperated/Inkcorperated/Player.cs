@@ -97,7 +97,7 @@ namespace Inkcorperated
 			// Gives player an initial y-velocity to jump into the air
 			if(!falling && kbState.IsKeyDown(Keys.W))
 			{
-				yVelocity = -15;
+				yVelocity = -12;
 				falling = true;
 			}
 		}
