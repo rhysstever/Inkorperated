@@ -136,6 +136,11 @@ namespace Inkcorperated
                 player.Move(gameTime);
                 //Handles drawing blocks
                 controller.CheckForRectDraw(previousMouseState, GraphicsDevice.Viewport.Bounds);
+                //Moves all of the bullets
+                foreach(Bullet b in controller.Bullets)
+                {
+                    b.X += b.Direction;
+                }
 				// Handles collisions between the player and all other collidables
 				collisionManager.Colliding();
                 //Handles switching block types

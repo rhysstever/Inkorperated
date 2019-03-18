@@ -166,6 +166,11 @@ namespace Inkcorperated
             return true;
         }
 
+        public void ShootBullet(Bullet b)
+        {
+            bullets.Add(b);
+        }
+
         public void CheckBlockTypeChange(KeyboardState previousKeyboardState)
         {
             KeyboardState currentState = Keyboard.GetState();
@@ -292,6 +297,11 @@ namespace Inkcorperated
                     inkContainer.Draw(batch, Color.White);
                     break;
             }*/
+
+            foreach(Bullet b in bullets)
+            {
+                b.Draw(batch, b.Team == Teams.Player ? Color.Black : Color.Red);
+            }
 
             if (customBlocks.Count > 0)
             {
