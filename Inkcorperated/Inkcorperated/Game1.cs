@@ -41,6 +41,8 @@ namespace Inkcorperated
 
         private SpriteFont fontArial;
 
+        private Button<GameStates> toGame;
+
         public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -74,10 +76,15 @@ namespace Inkcorperated
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-            controller.LoadLevels(Content.Load<Texture2D>("player_idle"), Content.Load<Texture2D>("block"), null, Content.Load<Texture2D>("goal"),
+            Texture2D blankTexture = Content.Load<Texture2D>("block");
+            controller.LoadLevels(Content.Load<Texture2D>("player_idle"), blankTexture, null, Content.Load<Texture2D>("goal"),
                 Content.Load<Texture2D>("Ink Bar"), Content.Load<Texture2D>("Ink Fill"), Content.Load<Texture2D>("Background01"));
 			player = controller.LevelPlayer;
             fontArial = Content.Load<SpriteFont>("fontArial");
+
+            toGame = new Button<GameStates>(new Rectangle(325, 250, 150, 50), blankTexture, SwitchGameState, GameStates.Game, "To Game");
+
+            controller.LoadLevel(0);
         }
 
 		/// <summary>
@@ -102,11 +109,7 @@ namespace Inkcorperated
 			switch(currentGameState)
 			{
 				case GameStates.MainMenu:
-					if (SingleKeyPress(Keys.Enter))
-					{
-						currentGameState = GameStates.Game;
-						controller.LoadLevel(0);
-					}
+                    toGame.IsClicked(previousMouseState);
 					break;
 
 				case GameStates.Options:
@@ -195,12 +198,15 @@ namespace Inkcorperated
                     new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Inkorporated").X / 2), GraphicsDevice.Viewport.Height / 4),
                     Color.White);
 
-                    // Writes the instructions
+                    //Draws the button
+                    toGame.Draw(spriteBatch, Color.Black, Color.White, fontArial);
+                    /* Writes the instructions
                     spriteBatch.DrawString(
                     fontArial,
                     "Hit 'Enter' to Start",
                     new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Start").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
                     Color.White);
+                    */
                     break;
 
                 case GameStates.Game:
@@ -264,6 +270,11 @@ namespace Inkcorperated
 
 			base.Draw(gameTime);
 		}
+
+        private void SwitchGameState(GameStates state)
+        {
+            currentGameState = state;
+        }
 
         // Helper Methods
         /// <summary>

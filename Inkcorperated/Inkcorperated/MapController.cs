@@ -106,30 +106,6 @@ namespace Inkcorperated
                     break;
                 }
             }
-            /*
-            //For the amount of levels that need to be loaded
-            for (int i = 0; i < amtOfLevels; i++)
-            {
-                Map newMap = new Map(ParseQuad(reader.ReadLine()), int.Parse(reader.ReadLine()), ParseQuad(reader.ReadLine()));
-                int amtOfBlocks = int.Parse(reader.ReadLine());
-                //Loads all of the blocks in this level
-                for (int x = 0; x < amtOfBlocks; x++)
-                {
-                    newMap.AddBlock(new Block(ParseQuad(reader.ReadLine()), blockTexture, (BlockType)int.Parse(reader.ReadLine())));
-                }
-
-                int amtOfEnemies = int.Parse(reader.ReadLine());
-                //Loads all of the enemies in this level
-                for (int x = 0; x < amtOfEnemies; x++)
-                {
-                    newMap.AddEnemy(new Enemy(ParseQuad(reader.ReadLine()), blockTexture));
-                }
-
-                //Adds the level to the main list
-                levels.Add(newMap);
-            }
-            reader.Close();
-            */
         }
 
         public void LoadLevel(int level)

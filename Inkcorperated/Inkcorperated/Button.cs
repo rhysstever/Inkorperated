@@ -10,26 +10,39 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Inkcorperated
 {
-    class Button : Drawable
+    class Button<T1> : Drawable
     {
-        //Delegate -- needs a variable for the next thing to load
-        public delegate void ClickHandler(Drawable thingToLoad);
+        public delegate void OnClick(T1 i);
+        OnClick onClick;
 
-        public Button(Rectangle bounds, Texture2D texture) : base(bounds, texture)
+        private T1 passValue;
+        private string text;
+
+        public Button(Rectangle bounds, Texture2D texture, OnClick function, T1 value, string text) : base(bounds, texture)
         {
-
+            onClick = function;
+            passValue = value;
+            this.text = text;
         }
 
-        //Mouse is within the button return true, otherwise return false
-        public bool Collided()
+        public bool IsClicked(MouseState prevState)
         {
-            return this.Bounds.Intersects(new Rectangle(Mouse.GetState().Position, new Point(1, 1)));
+            if (Mouse.GetState().LeftButton == ButtonState.Released && prevState.LeftButton == ButtonState.Pressed && Bounds.Contains(Mouse.GetState().Position))
+            {
+                onClick(passValue);
+                return true;
+            }
+            return false;
         }
 
-        //If the mouse and the button have collided and the mouse is clicking only on this frame then return true, otherwise return false
-        public bool IsClicked(MouseState currentState, MouseState prevState)
+        public void Draw(SpriteBatch batch, Color backgroundColor, Color textColor, SpriteFont font)
         {
-            return Collided() && currentState.LeftButton != prevState.LeftButton;
+            //Draws the background
+            base.Draw(batch, backgroundColor);
+            //Draws the text
+            float x = (Bounds.X + Bounds.Width / 2.0f) - (font.MeasureString(text).X / 2.0f);
+            float y = (Bounds.Y + Bounds.Height / 2.0f) - (font.MeasureString(text).Y / 2.0f);
+            batch.DrawString(font, text, new Vector2(x, y), textColor);
         }
     }
 }
