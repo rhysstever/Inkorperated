@@ -41,7 +41,8 @@ namespace Inkcorperated
 
         private SpriteFont fontArial;
 
-        private Button<GameStates> toGame;
+        private Button<GameStates> play;
+		private Button<GameStates> unpause;
 
         public Game1()
 		{
@@ -82,7 +83,8 @@ namespace Inkcorperated
 			player = controller.LevelPlayer;
             fontArial = Content.Load<SpriteFont>("fontArial");
 
-            toGame = new Button<GameStates>(new Rectangle(325, 250, 150, 50), blankTexture, SwitchGameState, GameStates.Game, "To Game");
+            play = new Button<GameStates>(new Rectangle(325, 250, 150, 50), blankTexture, SwitchGameState, GameStates.Game, "Play");
+			unpause = new Button<GameStates>(new Rectangle(325, 250, 150, 50), blankTexture, SwitchGameState, GameStates.Game, "Unpause");
 
             controller.LoadLevel(0);
         }
@@ -109,7 +111,8 @@ namespace Inkcorperated
 			switch(currentGameState)
 			{
 				case GameStates.MainMenu:
-                    toGame.IsClicked(previousMouseState);
+					// When clicked, switches GameState from MainMenu to the Game
+                    play.IsClicked(previousMouseState);
 					break;
 
 				case GameStates.Options:
@@ -146,6 +149,9 @@ namespace Inkcorperated
 					break;
 
 				case GameStates.PauseMenu:
+					// When clicked, "unpauses" the game
+					// Changes GameState back from Pause to Game
+					unpause.IsClicked(previousMouseState);
 					if (SingleKeyPress(Keys.Escape))
 					{
 						currentGameState = GameStates.Game;
@@ -199,7 +205,8 @@ namespace Inkcorperated
                     Color.White);
 
                     //Draws the button
-                    toGame.Draw(spriteBatch, Color.Black, Color.White, fontArial);
+                    play.Draw(spriteBatch, Color.Black, Color.White, fontArial);
+
                     /* Writes the instructions
                     spriteBatch.DrawString(
                     fontArial,
@@ -223,13 +230,16 @@ namespace Inkcorperated
                     new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Paused").X / 2), GraphicsDevice.Viewport.Height / 4),
                     Color.White);
 
-                    // Writes the instructions
+					// Draws "unpause" button
+					unpause.Draw(spriteBatch, Color.Black, Color.White, fontArial);
+
+                    /* Writes the instructions
                     spriteBatch.DrawString(
                     fontArial,
                     "Hit 'Esc' to Return to Game.",
                     new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Esc' to Return to Game").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
-                    Color.White);
-                    break;
+                    Color.White); */
+                    break; 
 
                 case GameStates.GameOver:
                     GraphicsDevice.Clear(Color.Black);
