@@ -72,11 +72,9 @@ namespace Inkcorperated
             inkFill = new Drawable(new Rectangle(20, 20, 10, 50), inkFillTexture);
             //Sets up the goal to have the goal texture
             goal = new Drawable(new Rectangle(), goalTexture);
-
             for(int i = 1; i < i + 1; i++)
             {
-                try
-                {
+                if(File.Exists("../../../../Content/Level" + i + ".level")) {
                     Stream inStream = File.OpenRead("../../../../Content/Level" + i + ".level");
                     BinaryReader file = new BinaryReader(inStream);
                     Map newMap = new Map(file.ReadInt32());
@@ -98,14 +96,16 @@ namespace Inkcorperated
                                 newMap.Goal = new Rectangle(x * 20, y * 20, 20, 20);
                         }
                     }
+                    newMap.Unlocked = file.ReadBoolean();
                     levels.Add(newMap);
                     file.Close();
                 }
-                catch
+                else
                 {
                     break;
                 }
             }
+            levels[0].Unlocked = true;
         }
 
         public void LoadLevel(int level)
@@ -128,6 +128,17 @@ namespace Inkcorperated
 			return levels[currentLevel];
 		}
 
+        public List<Tuple<int, bool>> GetMapData()
+        {
+            List<Tuple<int, bool>> mapData = new List<Tuple<int, bool>>();
+            for(int i = 0; i < levels.Count; i++)
+            {
+                mapData.Add(new Tuple<int, bool>(i, levels[i].Unlocked));
+            }
+            Console.WriteLine(mapData.Count);
+            return mapData;
+        }
+
         public void ResetLevel()
         {
             LoadLevel(currentLevel);
@@ -139,6 +150,7 @@ namespace Inkcorperated
             if (currentLevel + 1 >= levels.Count)
                 return false;
             currentLevel++;
+            levels[currentLevel].Unlocked = true;
             LoadLevel(currentLevel);
             return true;
         }
