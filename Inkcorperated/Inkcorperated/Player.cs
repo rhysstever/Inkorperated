@@ -18,6 +18,8 @@ namespace Inkcorperated
 		private bool falling;
 		private const int GRAVITY = 1;
 		private const int SPEED = 2;
+        private bool jumpBoost;
+        private bool speedBoost;
 
 		// Properties
 		public bool Falling
@@ -35,6 +37,9 @@ namespace Inkcorperated
             get { return inkLevels; }
             set { inkLevels = value; }
         }
+
+        public bool JumpBoost { get { return jumpBoost; } set { jumpBoost = value; } }
+        public bool SpeedBoost { get { return speedBoost; } set { speedBoost = value; } }
 		
 		// Constructor
         
@@ -50,6 +55,8 @@ namespace Inkcorperated
 			this.inkLevels = inkLevels; // starting value of ink (can be changed for balancing)
 			yVelocity = 0;
 			falling = false;
+            speedBoost = false;
+            jumpBoost = false;
         }
 
         /// <summary>
@@ -75,13 +82,26 @@ namespace Inkcorperated
 			// Moving left or right
 			if(kbState.IsKeyDown(Keys.D))
 			{
-				X += SPEED;
+                if (speedBoost)
+                {
+                    X += (SPEED * 2);
+                }
+                else
+                {
+                    X += SPEED;
+                }
 				Direction = 1;
 			}
 			else if(kbState.IsKeyDown(Keys.A))
 			{
-				X -= SPEED;
-				Direction = -1;
+                if (speedBoost)
+                {
+                    X -= (SPEED * 2);
+                }
+                else
+                {
+                    X -= SPEED;
+                }
 			}
 			
 			// Falling
@@ -98,6 +118,17 @@ namespace Inkcorperated
 			// Gives player an initial y-velocity to jump into the air
 			if(!falling && kbState.IsKeyDown(Keys.W))
 			{
+                if (jumpBoost)
+                {
+                    yVelocity = -17;
+                }
+                else
+                {
+                    yVelocity = -12;
+                }
+
+                falling = true;
+            }
 				yVelocity = -12;
 				falling = true;
 			}

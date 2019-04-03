@@ -42,6 +42,28 @@ namespace Inkcorperated
 				return false;
 		}
 
+        /// <summary>
+        /// Checks the block type and changes the player property as needed
+        /// </summary>
+        public void checkBlockType(int i)
+        {
+            // Handling block types...
+            if (allBlocks[i].Type == BlockType.Basic)
+            {
+                controller.LevelPlayer.JumpBoost = false;
+                controller.LevelPlayer.SpeedBoost = false;
+            }
+            else if (allBlocks[i].Type == BlockType.Bouncy)
+            {
+                controller.LevelPlayer.JumpBoost = true;
+            }
+
+            else if (allBlocks[i].Type == BlockType.Speed)
+            {
+                controller.LevelPlayer.SpeedBoost = true;
+            }
+        }
+
 		public void Colliding()
 		{
 			allBlocks = new List<Block>();
@@ -85,18 +107,15 @@ namespace Inkcorperated
 						controller.LevelPlayer.X -= intersection.Width * Math.Sign(allBlocks[i].Bounds.X - controller.LevelPlayer.X);
 					}
 
-                    // Handling block types...
-                    if(kbState.IsKeyDown(Keys.W) && !controller.LevelPlayer.Falling && allBlocks[i].Type == BlockType.Bouncy)
-                    {
-                        controller.LevelPlayer.YVelocity *= 2;
-                        controller.LevelPlayer.Falling = true;
-                    }
-				}
+                    checkBlockType(i);
+                }
 				else if(allBlocks[i].Bounds.Intersects(bounceCheck) && controller.LevelPlayer.YVelocity >= 0)
 				{
 					controller.LevelPlayer.Falling = false;
 					controller.LevelPlayer.YVelocity = 0;
-				}
+                    checkBlockType(i);
+                }
+
 			}
 
 			// Checks for win condition (if player collides with the goal flag)
