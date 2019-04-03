@@ -12,18 +12,16 @@ namespace Inkcorperated
     {
         // Fields
         private int range;
-        private int health;
 
         // Properties
         public int Range { get { return range; } }
-        public int Health { get { return health; } }
 
         // Constructor
 
-        public Enemy(int range, int health, Rectangle bounds, Texture2D texture, float fireRate = 2.0f) : base(bounds, texture, fireRate)
+        public Enemy(int range, int health, Teams team, Rectangle bounds, Texture2D texture, float fireRate = 2.0f) 
+			: base(health, team, bounds, texture, fireRate)
         {
             this.range = range;
-            this.health = health;
         }
 
 

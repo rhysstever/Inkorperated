@@ -15,8 +15,9 @@ namespace Inkcorperated
         List<Map> levels;
         List<Block> customBlocks;
         Player player;
+		List<Enemy> enemies;
         Drawable goal;
-		List<Bullet> bullets;
+		static List<Bullet> bullets;
         int currentLevel;
         Texture2D playerTexture;
         Texture2D blockTexture;
@@ -33,16 +34,19 @@ namespace Inkcorperated
 		
 		public List<Block> CustomBlocks { get { return customBlocks; } }
 		public Player LevelPlayer { get { return player; } }
+		public List<Enemy> Enemies { get { return enemies; } }
 		public Drawable Goal { get { return goal; } }
 		public List<Bullet> Bullets { get { return bullets; } }
         public bool DrawingBlock { get { return Mouse.GetState().LeftButton == ButtonState.Pressed && !invalidDrawCheck; } }
+		public GraphicsDeviceManager Graphics { get { return graphics; } }
 
 		public MapController(GraphicsDeviceManager graphics)
         {
             levels = new List<Map>();
             customBlocks = new List<Block>();
             selectedType = BlockType.Basic;
-            player = new Player(new Rectangle(), null, 0);
+            player = new Player(1, Teams.Player, new Rectangle(), null, 0);
+			enemies = new List<Enemy>();
             bullets = new List<Bullet>();
             invalidDrawCheck = false;
             this.graphics = graphics;
@@ -143,7 +147,7 @@ namespace Inkcorperated
             return true;
         }
 
-        public void ShootBullet(Bullet b)
+        public static void ShootBullet(Bullet b)
         {
             bullets.Add(b);
         }

@@ -21,6 +21,7 @@ namespace Inkcorperated
         private Teams team;
         private int direction;
 
+		public int Damage { get { return bulletDamage; } }
         public int Direction{ get{ return direction; } }
         public Teams Team{ get { return team; } }
 
