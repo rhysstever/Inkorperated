@@ -18,8 +18,8 @@ namespace Inkcorperated
 
         // Constructor
 
-        public Enemy(int range, int health, Teams team, Rectangle bounds, Texture2D texture, float fireRate = 2.0f) 
-			: base(health, team, bounds, texture, fireRate)
+        public Enemy(int range, int health, Teams team, int direction, Rectangle bounds, Texture2D texture, float fireRate = 2.0f) 
+			: base(health, team, direction, bounds, texture, fireRate)
         {
             this.range = range;
         }
