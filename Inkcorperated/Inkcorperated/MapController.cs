@@ -152,22 +152,15 @@ namespace Inkcorperated
         {
             KeyboardState currentState = Keyboard.GetState();
             
-            if (currentState.IsKeyDown(Keys.D1) || (SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Speed) || (SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Bouncy))
+            if (currentState.IsKeyDown(Keys.D1) || (Utilities.SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Speed) 
+				|| (Utilities.SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Bouncy))
                 selectedType = BlockType.Basic;
-            else if (currentState.IsKeyDown(Keys.D2) || (SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Bouncy) || (SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Basic))
+            else if (currentState.IsKeyDown(Keys.D2) || (Utilities.SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Bouncy) 
+				|| (Utilities.SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Basic))
                 selectedType = BlockType.Speed;
-            else if (currentState.IsKeyDown(Keys.D3) || (SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Basic) || (SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Speed))
+            else if (currentState.IsKeyDown(Keys.D3) || (Utilities.SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Basic) 
+				|| (Utilities.SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Speed))
                 selectedType = BlockType.Bouncy;
-        }
-
-        /// <summary>
-        /// Returns true if this is the first frame that the key was pressed
-        /// False otherwise
-        /// </summary>
-        /// <param name="key">Represents the key to check (One of the "Keys" enum values)</param>
-        public bool SingleKeyPress(KeyboardState previous, KeyboardState current, Keys key)
-        {
-            return current.IsKeyDown(key) && previous.IsKeyUp(key);
         }
 
         public void CheckForRectDraw(MouseState previousMouseState, Rectangle window)
@@ -181,14 +174,15 @@ namespace Inkcorperated
                     invalidDrawCheck = true;
                     return;
                 }
-                customBlocks.Add(new Block(new Rectangle(RoundDownToNearestTwenty(currentState.X), RoundDownToNearestTwenty(currentState.Y), 0, 0), blockTexture, selectedType));
+                customBlocks.Add(new Block(new Rectangle(Utilities.RoundDownToNearestTwenty(currentState.X), 
+					Utilities.RoundDownToNearestTwenty(currentState.Y), 0, 0), blockTexture, selectedType));
             }
 
             //if the player is clicking
             if (DrawingBlock)
             {
-                customBlocks[customBlocks.Count - 1].Width = RoundUpToNearestTwenty(currentState.X - customBlocks[customBlocks.Count - 1].X);
-                customBlocks[customBlocks.Count - 1].Height = RoundUpToNearestTwenty(currentState.Y - customBlocks[customBlocks.Count - 1].Y);
+                customBlocks[customBlocks.Count - 1].Width = Utilities.RoundUpToNearestTwenty(currentState.X - customBlocks[customBlocks.Count - 1].X);
+                customBlocks[customBlocks.Count - 1].Height = Utilities.RoundUpToNearestTwenty(currentState.Y - customBlocks[customBlocks.Count - 1].Y);
                 if(currentState.RightButton == ButtonState.Pressed){
                     invalidDrawCheck = true;
                     customBlocks.RemoveAt(customBlocks.Count - 1);
@@ -342,31 +336,6 @@ namespace Inkcorperated
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Parses a string in the form "number1 number2 number3 number4" into a rectangle with the corresponding values
-        /// </summary>
-        private Rectangle ParseQuad(string n)
-        {
-            string[] split = n.Split(' ');
-            return new Rectangle(int.Parse(split[0]), int.Parse(split[1]), int.Parse(split[2]), int.Parse(split[3]));
-        }
-
-        /// <summary>
-        /// Rounds upwards to the nearest ten
-        /// </summary>
-        private int RoundUpToNearestTwenty(int i)
-        {
-            return Math.Sign(i) * (int)Math.Ceiling(Math.Abs(i / 20.0)) * 20;
-        }
-
-        /// <summary>
-        /// Rounds downward to the nearest ten
-        /// </summary>
-        private int RoundDownToNearestTwenty(int i)
-        {
-            return Math.Sign(i) * (int)Math.Floor(Math.Abs(i / 20.0)) * 20;
         }
     }
 }
