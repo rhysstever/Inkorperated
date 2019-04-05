@@ -18,12 +18,10 @@ namespace Inkcorperated
 		private bool falling;
 		private const int GRAVITY = 1;
 		private const int SPEED = 2;
-        private bool facingRight;
         private bool jumpBoost;
         private bool speedBoost;
 
 		// Properties
-
 		public bool Falling
 		{
 			get { return falling; }
@@ -45,15 +43,18 @@ namespace Inkcorperated
 		
 		// Constructor
         
+		/// <param name="health">The amount of health of the player</param>
+		/// <param name="team">The team of the player (Player)</param>
+		/// <param name="direction">The direction the player is facing</param>
 		/// <param name="bounds">The hitbox of the player</param>
 		/// <param name="texture">The visual of the player</param>
 		/// <param name="fireRate">How often the player is allowed to shoot</param>
-		public Player(Rectangle bounds, Texture2D texture, int inkLevels, float fireRate = 1.0f) : base(bounds, texture, fireRate)
+		public Player(int health, Teams team, int direction, Rectangle bounds, Texture2D texture, int inkLevels, float fireRate = 1.0f) 
+			: base(health, team, direction, bounds, texture, fireRate)
 		{
 			this.inkLevels = inkLevels; // starting value of ink (can be changed for balancing)
 			yVelocity = 0;
 			falling = false;
-            facingRight = true;
             speedBoost = false;
             jumpBoost = false;
         }
@@ -89,7 +90,7 @@ namespace Inkcorperated
                 {
                     X += SPEED;
                 }
-                facingRight = true;
+				Direction = 1;
 			}
 			else if(kbState.IsKeyDown(Keys.A))
 			{
@@ -101,7 +102,7 @@ namespace Inkcorperated
                 {
                     X -= SPEED;
                 }
-                facingRight = false;
+				Direction = -1;
 			}
 			
 			// Falling
@@ -129,12 +130,20 @@ namespace Inkcorperated
 
                 falling = true;
             }
+			
+			falling = true;
+
+			// Shooting
+			if(kbState.IsKeyDown(Keys.Space))
+			{
+				Fire(this);
+			}
 		}
 
         //A new Draw method for the player. Flips based on if the A or D button is pressed
         public new void Draw(SpriteBatch batch, Color c)
         {
-            if (!facingRight)
+            if (Direction == -1) // facing left
                 batch.Draw(texture, Bounds, null, Color.White, 0.0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0.0f);
             else
                 batch.Draw(texture, Bounds, Color.White);

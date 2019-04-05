@@ -15,8 +15,9 @@ namespace Inkcorperated
         List<Map> levels;
         List<Block> customBlocks;
         Player player;
+		List<Enemy> enemies;
         Drawable goal;
-		List<Bullet> bullets;
+		static List<Bullet> bullets;
         int currentLevel;
         Texture2D playerTexture;
         Texture2D blockTexture;
@@ -33,16 +34,19 @@ namespace Inkcorperated
 		
 		public List<Block> CustomBlocks { get { return customBlocks; } }
 		public Player LevelPlayer { get { return player; } }
+		public List<Enemy> Enemies { get { return enemies; } }
 		public Drawable Goal { get { return goal; } }
 		public List<Bullet> Bullets { get { return bullets; } }
         public bool DrawingBlock { get { return Mouse.GetState().LeftButton == ButtonState.Pressed && !invalidDrawCheck; } }
+		public GraphicsDeviceManager Graphics { get { return graphics; } }
 
 		public MapController(GraphicsDeviceManager graphics)
         {
             levels = new List<Map>();
             customBlocks = new List<Block>();
             selectedType = BlockType.Basic;
-            player = new Player(new Rectangle(), null, 0);
+            player = new Player(1, Teams.Player, 1, new Rectangle(), null, 0);
+			enemies = new List<Enemy>();
             bullets = new List<Bullet>();
             invalidDrawCheck = false;
             this.graphics = graphics;
@@ -72,11 +76,9 @@ namespace Inkcorperated
             inkFill = new Drawable(new Rectangle(20, 20, 10, 50), inkFillTexture);
             //Sets up the goal to have the goal texture
             goal = new Drawable(new Rectangle(), goalTexture);
-
             for(int i = 1; i < i + 1; i++)
             {
-                try
-                {
+                if(File.Exists("../../../../Content/Level" + i + ".level")) {
                     Stream inStream = File.OpenRead("../../../../Content/Level" + i + ".level");
                     BinaryReader file = new BinaryReader(inStream);
                     Map newMap = new Map(file.ReadInt32());
@@ -98,14 +100,16 @@ namespace Inkcorperated
                                 newMap.Goal = new Rectangle(x * 20, y * 20, 20, 20);
                         }
                     }
+                    newMap.Unlocked = file.ReadBoolean();
                     levels.Add(newMap);
                     file.Close();
                 }
-                catch
+                else
                 {
                     break;
                 }
             }
+            levels[0].Unlocked = true;
         }
 
         public void LoadLevel(int level)
@@ -128,6 +132,17 @@ namespace Inkcorperated
 			return levels[currentLevel];
 		}
 
+        public List<Tuple<int, bool>> GetMapData()
+        {
+            List<Tuple<int, bool>> mapData = new List<Tuple<int, bool>>();
+            for(int i = 0; i < levels.Count; i++)
+            {
+                mapData.Add(new Tuple<int, bool>(i, levels[i].Unlocked));
+            }
+            Console.WriteLine(mapData.Count);
+            return mapData;
+        }
+
         public void ResetLevel()
         {
             LoadLevel(currentLevel);
@@ -139,11 +154,12 @@ namespace Inkcorperated
             if (currentLevel + 1 >= levels.Count)
                 return false;
             currentLevel++;
+            levels[currentLevel].Unlocked = true;
             LoadLevel(currentLevel);
             return true;
         }
 
-        public void ShootBullet(Bullet b)
+        public static void ShootBullet(Bullet b)
         {
             bullets.Add(b);
         }

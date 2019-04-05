@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace Inkcorperated
 {
@@ -15,6 +17,7 @@ namespace Inkcorperated
     public enum GameStates
     {
         MainMenu,
+        LevelSelect,
         PauseMenu,
         Options,
         Game,
@@ -41,8 +44,14 @@ namespace Inkcorperated
 
         private SpriteFont fontArial;
 
+        Texture2D blankTexture;
+
         private Button<GameStates> play;
 		private Button<GameStates> unpause;
+        private Button<GameStates> backToTitle;
+
+        private Drawable levelSelectBackground;
+        private List<Tuple<Button<int>, bool>> levelButtons;
 
         public Game1()
 		{
@@ -66,6 +75,8 @@ namespace Inkcorperated
 			collisionManager = new CollisionManager(controller);
             previousMouseState = new MouseState();
             previousKeyboardState = new KeyboardState();
+
+            levelButtons = new List<Tuple<Button<int>, bool>>();
             base.Initialize();
 		}
 
@@ -77,14 +88,17 @@ namespace Inkcorperated
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-            Texture2D blankTexture = Content.Load<Texture2D>("block");
+            blankTexture = Content.Load<Texture2D>("block");
             controller.LoadLevels(Content.Load<Texture2D>("player_idle"), blankTexture, null, Content.Load<Texture2D>("goal"),
                 Content.Load<Texture2D>("Ink Bar"), Content.Load<Texture2D>("Ink Fill"), Content.Load<Texture2D>("Background01"));
 			player = controller.LevelPlayer;
             fontArial = Content.Load<SpriteFont>("fontArial");
 
-            play = new Button<GameStates>(new Rectangle(325, 250, 150, 50), blankTexture, SwitchGameState, GameStates.Game, "Play");
+            play = new Button<GameStates>(new Rectangle(325, 250, 150, 50), blankTexture, SwitchGameState, GameStates.LevelSelect, "Play");
 			unpause = new Button<GameStates>(new Rectangle(325, 250, 150, 50), blankTexture, SwitchGameState, GameStates.Game, "Unpause");
+            backToTitle = new Button<GameStates>(new Rectangle(325, 325, 150, 50), blankTexture, SwitchGameState, GameStates.MainMenu, "Back to Title");
+
+            levelSelectBackground = new Drawable(new Rectangle(GraphicsDevice.Viewport.Width / 2 - 120, GraphicsDevice.Viewport.Height / 2 - 120, 240, 240), blankTexture);
 
             controller.LoadLevel(0);
         }
@@ -95,7 +109,7 @@ namespace Inkcorperated
 		/// </summary>
 		protected override void UnloadContent()
 		{
-			// TODO: Unload any non ContentManager content here
+			
 		}
 
 		/// <summary>
@@ -115,7 +129,19 @@ namespace Inkcorperated
                     play.IsClicked(previousMouseState);
 					break;
 
-				case GameStates.Options:
+                case GameStates.LevelSelect:
+                    foreach (Tuple<Button<int>, bool> b in levelButtons)
+                    {
+                        if(b.Item2)
+                            b.Item1.IsClicked(previousMouseState);
+                    }
+					if (SingleKeyPress(Keys.Escape))
+					{
+						currentGameState = GameStates.MainMenu;
+					}
+                    break;
+
+                case GameStates.Options:
 					
 					break;
 
@@ -152,7 +178,8 @@ namespace Inkcorperated
 					// When clicked, "unpauses" the game
 					// Changes GameState back from Pause to Game
 					unpause.IsClicked(previousMouseState);
-					if (SingleKeyPress(Keys.Escape))
+                    backToTitle.IsClicked(previousMouseState);
+                    if (SingleKeyPress(Keys.Escape))
 					{
 						currentGameState = GameStates.Game;
 					}
@@ -216,6 +243,14 @@ namespace Inkcorperated
                     */
                     break;
 
+                case GameStates.LevelSelect:
+                    levelSelectBackground.Draw(spriteBatch, Color.Black);
+                    foreach(Tuple<Button<int>, bool> b in levelButtons)
+                    {
+                        b.Item1.Draw(spriteBatch, b.Item2 ? Color.Gray : Color.Red, Color.Black, fontArial);
+                    }
+                    break;
+
                 case GameStates.Game:
                     controller.Draw(spriteBatch);
                     break;
@@ -232,6 +267,9 @@ namespace Inkcorperated
 
 					// Draws "unpause" button
 					unpause.Draw(spriteBatch, Color.Black, Color.White, fontArial);
+
+                    //Draws "Back to Title" button
+                    backToTitle.Draw(spriteBatch, Color.Black, Color.White, fontArial);
 
                     /* Writes the instructions
                     spriteBatch.DrawString(
@@ -281,9 +319,34 @@ namespace Inkcorperated
 			base.Draw(gameTime);
 		}
 
+        private void EnterLevel(int levelID)
+        {
+            currentGameState = GameStates.Game;
+            controller.LoadLevel(levelID);
+        }
+
         private void SwitchGameState(GameStates state)
         {
             currentGameState = state;
+            //Re-loads the level buttons
+            if(currentGameState == GameStates.LevelSelect)
+            {
+                levelButtons.Clear();
+
+                List<Tuple<int, bool>> mapData = controller.GetMapData();
+                int x = GraphicsDevice.Viewport.Width / 2 - 105;
+                int y = GraphicsDevice.Viewport.Height / 2 - 105;
+                foreach (Tuple<int, bool> data in mapData)
+                {
+                    levelButtons.Add(new Tuple<Button<int>, bool>(new Button<int>(new Rectangle(x, y, 20, 20), blankTexture, EnterLevel, data.Item1, "" + data.Item1), data.Item2));
+                    x += 30;
+                    if(x > GraphicsDevice.Viewport.Width / 2 + 105)
+                    {
+                        x = GraphicsDevice.Viewport.Width / 2 - 105;
+                        y += 30;
+                    }
+                }
+            }
         }
 
         // Helper Methods
