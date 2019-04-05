@@ -102,6 +102,7 @@ namespace Inkcorperated
                 {
                     X -= SPEED;
                 }
+				Direction = -1;
 			}
 			
 			// Falling
@@ -129,9 +130,8 @@ namespace Inkcorperated
 
                 falling = true;
             }
-				yVelocity = -12;
-				falling = true;
-			}
+			
+			falling = true;
 
 			// Shooting
 			if(kbState.IsKeyDown(Keys.Space))
