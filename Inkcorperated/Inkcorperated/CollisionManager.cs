@@ -101,7 +101,7 @@ namespace Inkcorperated
 					{
 						// Moves the player left or right away from the block
 						controller.LevelPlayer.X -= intersection.Width * Math.Sign(allBlocks[i].Bounds.X - controller.LevelPlayer.X);
-					}
+                    }
 
                     checkBlockType(i);
                 }
