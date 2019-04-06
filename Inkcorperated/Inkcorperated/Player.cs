@@ -136,7 +136,7 @@ namespace Inkcorperated
 			// Shooting
 			if(kbState.IsKeyDown(Keys.Space))
 			{
-				Fire(this);
+				Fire();
 			}
 		}
 

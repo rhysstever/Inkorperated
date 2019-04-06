@@ -60,13 +60,13 @@ namespace Inkcorperated
             return false;
         }
 
-		public void Fire(Entity entity)
+		public void Fire()
 		{
 			if(CanFire())
 			{
 				// Creates bullet and adds it to the 
 				// Map Controller's bullet list
-				// MapController.ShootBullet(new Bullet( , , entity.Team, Direction));
+				//MapController.ShootBullet(new Bullet(new Rectangle(), , this.Team, Direction));
 
 			}
 		}
