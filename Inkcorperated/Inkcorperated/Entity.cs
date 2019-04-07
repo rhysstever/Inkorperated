@@ -10,6 +10,8 @@ namespace Inkcorperated
 {
     class Entity : Drawable
     {
+		public static MapController controller;
+
 		private int health;
 		private Teams team;
 		private int direction;
@@ -30,10 +32,13 @@ namespace Inkcorperated
 			set { direction = value; }
 		}
 
-        public Entity(int health, Teams team, int direction, Rectangle bounds, Texture2D texture, float fireRate) : base(bounds, texture)
+        public Entity(int health, Teams team, int direction, Rectangle bounds, Texture2D texture, float fireRate) 
+			: base(bounds, texture)
         {
 			this.health = health;
 			this.fireRate = fireRate;
+			this.team = team;
+			this.direction = direction;
             timeSinceLastShot = 0;
         }
 
@@ -64,10 +69,20 @@ namespace Inkcorperated
 		{
 			if(CanFire())
 			{
-				// Creates bullet and adds it to the 
-				// Map Controller's bullet list
-				//MapController.ShootBullet(new Bullet(new Rectangle(), , this.Team, Direction));
+				int x = 0;
+				int y = Height / 2;
 
+				if(Direction == 1)
+				{
+					x = X - 16;
+				}
+				else if(Direction == -1)
+				{
+					x = X + Width;
+				}
+
+				// Sends info to make a bullet in the Map Controller class
+				controller.ShootBullet(new Rectangle(x, y, 16, 16), Team, Direction);
 			}
 		}
 

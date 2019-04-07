@@ -23,6 +23,7 @@ namespace Inkcorperated
         Texture2D blockTexture;
         Texture2D enemyTexture;
         Texture2D background;
+		Texture2D bulletTexture;
         Drawable inkContainer;
         Drawable inkFill;
         BlockType selectedType;
@@ -66,12 +67,13 @@ namespace Inkcorperated
         /// enemyX enemyY enemyWidth enemyHeight                --repeat for amtOfEnemies           |
         /// </summary>
         public void LoadLevels(Texture2D playerTexture, Texture2D blockTexture, Texture2D enemyTexture, Texture2D goalTexture,
-            Texture2D inkContainerTexture, Texture2D inkFillTexture, Texture2D bgPic)
+            Texture2D inkContainerTexture, Texture2D inkFillTexture, Texture2D bgPic, Texture2D bulletPic)
         {
             this.playerTexture = playerTexture;
             this.blockTexture = blockTexture;
             this.enemyTexture = enemyTexture;
             background = bgPic;
+			bulletTexture = bulletPic;
             inkContainer = new Drawable(new Rectangle(400, 30, 2, 2), inkContainerTexture);
             inkFill = new Drawable(new Rectangle(20, 20, 10, 50), inkFillTexture);
             //Sets up the goal to have the goal texture
@@ -159,9 +161,9 @@ namespace Inkcorperated
             return true;
         }
 
-        public static void ShootBullet(Bullet b)
+        public void ShootBullet(Rectangle bounds, Teams team, int direction)
         {
-            bullets.Add(b);
+			bullets.Add(new Bullet(bounds, bulletTexture, team, direction));
         }
 
         public void CheckBlockTypeChange(KeyboardState previousKeyboardState)
@@ -310,7 +312,9 @@ namespace Inkcorperated
                 }
 
                 //Fixes the values of the one the player is currently drawing so it draws correctly
-                Block fixedBox = new Block(new Rectangle(customBlocks[customBlocks.Count - 1].X, customBlocks[customBlocks.Count - 1].Y, customBlocks[customBlocks.Count - 1].Width, customBlocks[customBlocks.Count - 1].Height), blockTexture, customBlocks[customBlocks.Count - 1].Type);
+                Block fixedBox = new Block(new Rectangle(customBlocks[customBlocks.Count - 1].X, customBlocks[customBlocks.Count - 1].Y,
+					customBlocks[customBlocks.Count - 1].Width, customBlocks[customBlocks.Count - 1].Height),
+					blockTexture, customBlocks[customBlocks.Count - 1].Type);
                 if (Mouse.GetState().LeftButton == ButtonState.Pressed && !invalidDrawCheck)
                 {
                     if (fixedBox.Height < 0)
