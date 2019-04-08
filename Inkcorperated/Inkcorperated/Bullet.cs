@@ -22,6 +22,7 @@ namespace Inkcorperated
         private int direction;
         private int velocity;
 
+		public int Damage { get { return bulletDamage; } }
         public int Direction{ get{ return direction; } }
         public Teams Team{ get { return team; } }
         public int Velocity { get { return velocity; } }

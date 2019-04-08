@@ -122,6 +122,7 @@ namespace LevelEditor
                     }
                 }
             }
+            file.Write(false);
             file.Close();
             ActiveForm.Text = "Level Editor - " + path.Substring(path.LastIndexOf('\\') + 1);
             MessageBox.Show("File Saved Successfully.", "File Saved", MessageBoxButtons.OK);

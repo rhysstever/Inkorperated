@@ -15,13 +15,15 @@ namespace Inkcorperated
         List<Map> levels;
         List<Block> customBlocks;
         Player player;
+		List<Enemy> enemies;
         Drawable goal;
-		List<Bullet> bullets;
+		static List<Bullet> bullets;
         int currentLevel;
         Texture2D playerTexture;
         Texture2D blockTexture;
         Texture2D enemyTexture;
         Texture2D background;
+		Texture2D bulletTexture;
         Drawable inkContainer;
         Drawable inkFill;
         BlockType selectedType;
@@ -33,16 +35,19 @@ namespace Inkcorperated
 		
 		public List<Block> CustomBlocks { get { return customBlocks; } }
 		public Player LevelPlayer { get { return player; } }
+		public List<Enemy> Enemies { get { return enemies; } }
 		public Drawable Goal { get { return goal; } }
 		public List<Bullet> Bullets { get { return bullets; } }
         public bool DrawingBlock { get { return Mouse.GetState().LeftButton == ButtonState.Pressed && !invalidDrawCheck; } }
+		public GraphicsDeviceManager Graphics { get { return graphics; } }
 
 		public MapController(GraphicsDeviceManager graphics)
         {
             levels = new List<Map>();
             customBlocks = new List<Block>();
             selectedType = BlockType.Basic;
-            player = new Player(new Rectangle(), null, 0);
+            player = new Player(1, Teams.Player, 1, new Rectangle(), null, 0, 5);
+			enemies = new List<Enemy>();
             bullets = new List<Bullet>();
             invalidDrawCheck = false;
             this.graphics = graphics;
@@ -62,21 +67,20 @@ namespace Inkcorperated
         /// enemyX enemyY enemyWidth enemyHeight                --repeat for amtOfEnemies           |
         /// </summary>
         public void LoadLevels(Texture2D playerTexture, Texture2D blockTexture, Texture2D enemyTexture, Texture2D goalTexture,
-            Texture2D inkContainerTexture, Texture2D inkFillTexture, Texture2D bgPic)
+            Texture2D inkContainerTexture, Texture2D inkFillTexture, Texture2D bgPic, Texture2D bulletPic)
         {
             this.playerTexture = playerTexture;
             this.blockTexture = blockTexture;
             this.enemyTexture = enemyTexture;
             background = bgPic;
+			bulletTexture = bulletPic;
             inkContainer = new Drawable(new Rectangle(400, 30, 2, 2), inkContainerTexture);
             inkFill = new Drawable(new Rectangle(20, 20, 10, 50), inkFillTexture);
             //Sets up the goal to have the goal texture
             goal = new Drawable(new Rectangle(), goalTexture);
-
             for(int i = 1; i < i + 1; i++)
             {
-                try
-                {
+                if(File.Exists("../../../../Content/Level" + i + ".level")) {
                     Stream inStream = File.OpenRead("../../../../Content/Level" + i + ".level");
                     BinaryReader file = new BinaryReader(inStream);
                     Map newMap = new Map(file.ReadInt32());
@@ -98,14 +102,16 @@ namespace Inkcorperated
                                 newMap.Goal = new Rectangle(x * 20, y * 20, 20, 20);
                         }
                     }
+                    newMap.Unlocked = file.ReadBoolean();
                     levels.Add(newMap);
                     file.Close();
                 }
-                catch
+                else
                 {
                     break;
                 }
             }
+            levels[0].Unlocked = true;
         }
 
         public void LoadLevel(int level)
@@ -128,6 +134,17 @@ namespace Inkcorperated
 			return levels[currentLevel];
 		}
 
+        public List<Tuple<int, bool>> GetMapData()
+        {
+            List<Tuple<int, bool>> mapData = new List<Tuple<int, bool>>();
+            for(int i = 0; i < levels.Count; i++)
+            {
+                mapData.Add(new Tuple<int, bool>(i, levels[i].Unlocked));
+            }
+            Console.WriteLine(mapData.Count);
+            return mapData;
+        }
+
         public void ResetLevel()
         {
             LoadLevel(currentLevel);
@@ -139,35 +156,29 @@ namespace Inkcorperated
             if (currentLevel + 1 >= levels.Count)
                 return false;
             currentLevel++;
+            levels[currentLevel].Unlocked = true;
             LoadLevel(currentLevel);
             return true;
         }
 
-        public void ShootBullet(Bullet b)
+        public void ShootBullet(Rectangle bounds, Teams team, int direction)
         {
-            bullets.Add(b);
+			bullets.Add(new Bullet(bounds, bulletTexture, team, direction));
         }
 
         public void CheckBlockTypeChange(KeyboardState previousKeyboardState)
         {
             KeyboardState currentState = Keyboard.GetState();
             
-            if (currentState.IsKeyDown(Keys.D1) || (SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Speed) || (SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Bouncy))
+            if (currentState.IsKeyDown(Keys.D1) || (Utilities.SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Speed) 
+				|| (Utilities.SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Bouncy))
                 selectedType = BlockType.Basic;
-            else if (currentState.IsKeyDown(Keys.D2) || (SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Bouncy) || (SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Basic))
+            else if (currentState.IsKeyDown(Keys.D2) || (Utilities.SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Bouncy) 
+				|| (Utilities.SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Basic))
                 selectedType = BlockType.Speed;
-            else if (currentState.IsKeyDown(Keys.D3) || (SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Basic) || (SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Speed))
+            else if (currentState.IsKeyDown(Keys.D3) || (Utilities.SingleKeyPress(previousKeyboardState, currentState, Keys.Q) && selectedType == BlockType.Basic) 
+				|| (Utilities.SingleKeyPress(previousKeyboardState, currentState, Keys.E) && selectedType == BlockType.Speed))
                 selectedType = BlockType.Bouncy;
-        }
-
-        /// <summary>
-        /// Returns true if this is the first frame that the key was pressed
-        /// False otherwise
-        /// </summary>
-        /// <param name="key">Represents the key to check (One of the "Keys" enum values)</param>
-        public bool SingleKeyPress(KeyboardState previous, KeyboardState current, Keys key)
-        {
-            return current.IsKeyDown(key) && previous.IsKeyUp(key);
         }
 
         public void CheckForRectDraw(MouseState previousMouseState, Rectangle window)
@@ -181,14 +192,15 @@ namespace Inkcorperated
                     invalidDrawCheck = true;
                     return;
                 }
-                customBlocks.Add(new Block(new Rectangle(RoundDownToNearestTwenty(currentState.X), RoundDownToNearestTwenty(currentState.Y), 0, 0), blockTexture, selectedType));
+                customBlocks.Add(new Block(new Rectangle(Utilities.RoundDownToNearestTwenty(currentState.X), 
+					Utilities.RoundDownToNearestTwenty(currentState.Y), 0, 0), blockTexture, selectedType));
             }
 
             //if the player is clicking
             if (DrawingBlock)
             {
-                customBlocks[customBlocks.Count - 1].Width = RoundUpToNearestTwenty(currentState.X - customBlocks[customBlocks.Count - 1].X);
-                customBlocks[customBlocks.Count - 1].Height = RoundUpToNearestTwenty(currentState.Y - customBlocks[customBlocks.Count - 1].Y);
+                customBlocks[customBlocks.Count - 1].Width = Utilities.RoundUpToNearestTwenty(currentState.X - customBlocks[customBlocks.Count - 1].X);
+                customBlocks[customBlocks.Count - 1].Height = Utilities.RoundUpToNearestTwenty(currentState.Y - customBlocks[customBlocks.Count - 1].Y);
                 if(currentState.RightButton == ButtonState.Pressed){
                     invalidDrawCheck = true;
                     customBlocks.RemoveAt(customBlocks.Count - 1);
@@ -300,7 +312,9 @@ namespace Inkcorperated
                 }
 
                 //Fixes the values of the one the player is currently drawing so it draws correctly
-                Block fixedBox = new Block(new Rectangle(customBlocks[customBlocks.Count - 1].X, customBlocks[customBlocks.Count - 1].Y, customBlocks[customBlocks.Count - 1].Width, customBlocks[customBlocks.Count - 1].Height), blockTexture, customBlocks[customBlocks.Count - 1].Type);
+                Block fixedBox = new Block(new Rectangle(customBlocks[customBlocks.Count - 1].X, customBlocks[customBlocks.Count - 1].Y,
+					customBlocks[customBlocks.Count - 1].Width, customBlocks[customBlocks.Count - 1].Height),
+					blockTexture, customBlocks[customBlocks.Count - 1].Type);
                 if (Mouse.GetState().LeftButton == ButtonState.Pressed && !invalidDrawCheck)
                 {
                     if (fixedBox.Height < 0)
@@ -342,31 +356,6 @@ namespace Inkcorperated
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Parses a string in the form "number1 number2 number3 number4" into a rectangle with the corresponding values
-        /// </summary>
-        private Rectangle ParseQuad(string n)
-        {
-            string[] split = n.Split(' ');
-            return new Rectangle(int.Parse(split[0]), int.Parse(split[1]), int.Parse(split[2]), int.Parse(split[3]));
-        }
-
-        /// <summary>
-        /// Rounds upwards to the nearest ten
-        /// </summary>
-        private int RoundUpToNearestTwenty(int i)
-        {
-            return Math.Sign(i) * (int)Math.Ceiling(Math.Abs(i / 20.0)) * 20;
-        }
-
-        /// <summary>
-        /// Rounds downward to the nearest ten
-        /// </summary>
-        private int RoundDownToNearestTwenty(int i)
-        {
-            return Math.Sign(i) * (int)Math.Floor(Math.Abs(i / 20.0)) * 20;
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Inkcorperated
 		// Fields
 		private MapController controller;
 		private List<Block> allBlocks;
+		private bool collided;
 
 		// Properties
 		
@@ -22,6 +23,7 @@ namespace Inkcorperated
 		{
 			this.controller = controller;
 			allBlocks = new List<Block>();
+			collided = false;
 		}
 
 		// Methods
@@ -40,9 +42,38 @@ namespace Inkcorperated
 				return false;
 		}
 
+        /// <summary>
+        /// Checks the block type and changes the player property as needed
+        /// </summary>
+        public void checkBlockType(int i)
+        {
+            // Handling block types...
+            if (allBlocks[i].Type == BlockType.Basic)
+            {
+                controller.LevelPlayer.JumpBoost = false;
+                controller.LevelPlayer.SpeedBoost = false;
+            }
+            else if (allBlocks[i].Type == BlockType.Bouncy)
+            {
+                controller.LevelPlayer.JumpBoost = true;
+            }
+
+            else if (allBlocks[i].Type == BlockType.Speed)
+            {
+                controller.LevelPlayer.SpeedBoost = true;
+            }
+        }
+
 		public void Colliding()
 		{
 			allBlocks = new List<Block>();
+			
+			// Adds all drawn blocks and preset blocks to a 
+			// third list of all blocks on the screen
+			allBlocks.AddRange(controller.GetCurrentMap().MapBlocks);
+			allBlocks.AddRange(controller.CustomBlocks);
+
+			// ============== Player Collisions ===============
 
 			// Player is always falling, unless otherwise stated
 			controller.LevelPlayer.Falling = true; 
@@ -51,15 +82,10 @@ namespace Inkcorperated
 			// If THIS is colliding, but the player is not, the player does not get moved
 			// (removes the "bouncing" of the player being moved back up off the floor every frame)
 			Rectangle bounceCheck = new Rectangle(controller.LevelPlayer.X, controller.LevelPlayer.Y + controller.LevelPlayer.Height, controller.LevelPlayer.Width, 1);
-
-			// Adds all drawn blocks and preset blocks to a 
-			// third list of all blocks on the screen
-			allBlocks.AddRange(controller.GetCurrentMap().MapBlocks);
-			allBlocks.AddRange(controller.CustomBlocks);
-
+			
             // Checks collisions between the player and each block on the screen
-            //foreach (Block block in allBlocks)
-            //Console.WriteLine(controller.DrawingBlock);
+            // foreach (Block block in allBlocks)
+            // Console.WriteLine(controller.DrawingBlock);
             for(int i = 0; i < allBlocks.Count - (controller.DrawingBlock ? 1 : 0); i++)
 			{
 				if (controller.LevelPlayer.Bounds.Intersects(allBlocks[i].Bounds))
@@ -79,20 +105,17 @@ namespace Inkcorperated
 					{
 						// Moves the player left or right away from the block
 						controller.LevelPlayer.X -= intersection.Width * Math.Sign(allBlocks[i].Bounds.X - controller.LevelPlayer.X);
-					}
-
-                    // Handling block types...
-                    if(kbState.IsKeyDown(Keys.W) && !controller.LevelPlayer.Falling && allBlocks[i].Type == BlockType.Bouncy)
-                    {
-                        controller.LevelPlayer.YVelocity *= 2;
-                        controller.LevelPlayer.Falling = true;
                     }
-				}
+
+                    checkBlockType(i);
+                }
 				else if(allBlocks[i].Bounds.Intersects(bounceCheck) && controller.LevelPlayer.YVelocity >= 0)
 				{
 					controller.LevelPlayer.Falling = false;
 					controller.LevelPlayer.YVelocity = 0;
-				}
+                    checkBlockType(i);
+                }
+
 			}
 
 			// Checks for win condition (if player collides with the goal flag)
@@ -100,6 +123,61 @@ namespace Inkcorperated
 			{
 				// Progresses to next level
 				controller.NextLevel();
+			}
+			
+			// =============== Bullet Collisions ===============
+			for(int x = 0; x < controller.Bullets.Count; x++)
+			{
+				Bullet bullet = controller.Bullets[x];
+				collided = false;
+
+				// If bullet moves off screen
+				if (bullet.Bounds.Y < 0 || bullet.Bounds.Y > controller.Graphics.GraphicsDevice.Viewport.Height 
+					|| bullet.Bounds.X < 0 || bullet.Bounds.X > controller.Graphics.GraphicsDevice.Viewport.Width)
+					collided = true;
+
+				// If bullet hits an entity
+				foreach (Enemy enemy in controller.Enemies)
+				{
+					if (isColliding(bullet, enemy))
+					{
+						collided = true;
+
+						// Checks team of both bullet and entity, 
+						// if different, damage is dealt
+						if (bullet.Team != Teams.Enemy)
+						{
+							if (isColliding(bullet, enemy))
+								enemy.Health -= bullet.Damage;
+						}
+					}
+				}
+
+				// If the bullet hits the Player
+				if(isColliding(bullet, controller.LevelPlayer))
+				{
+					collided = true;
+
+					if (bullet.Team != Teams.Player)
+					{
+						if (isColliding(bullet, controller.LevelPlayer))
+							controller.LevelPlayer.Health -= bullet.Damage;
+					}
+				}
+
+				// If the bullet hits a wall (block)
+				foreach (Block block in allBlocks)
+				{
+					if (isColliding(bullet, block))
+						collided = true;
+				}
+
+				// If the bullet has met any of the 3 Despawn 
+				// conditions, it will be despawned
+				if(collided)
+				{
+					controller.Bullets.RemoveAt(x);
+				}
 			}
 		}
 	}
