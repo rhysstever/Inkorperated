@@ -75,7 +75,7 @@ namespace Inkcorperated
         }
 
 		// Methods
-		public void Move(GameTime gameTime)
+		public void Update(GameTime gameTime, KeyboardState previousKbState)
 		{
 			KeyboardState kbState = Keyboard.GetState();
 
@@ -83,25 +83,17 @@ namespace Inkcorperated
 			if(kbState.IsKeyDown(Keys.D))
 			{
                 if (speedBoost)
-                {
-                    X += (SPEED * 2);
-                }
+					X += (SPEED * 2);
                 else
-                {
-                    X += SPEED;
-                }
+					X += SPEED;
 				Direction = 1;
 			}
 			else if(kbState.IsKeyDown(Keys.A))
 			{
                 if (speedBoost)
-                {
-                    X -= (SPEED * 2);
-                }
+					X -= (SPEED * 2);
                 else
-                {
-                    X -= SPEED;
-                }
+					X -= SPEED;
 				Direction = -1;
 			}
 			
@@ -111,7 +103,6 @@ namespace Inkcorperated
 			if(falling)
 			{
 				Y += yVelocity;
-				//yVelocity = Math.Min(yVelocity + GRAVITY, 10);
 				yVelocity = yVelocity + GRAVITY;
 			}
 
@@ -120,24 +111,22 @@ namespace Inkcorperated
 			if(!falling && kbState.IsKeyDown(Keys.W))
 			{
                 if (jumpBoost)
-                {
-                    yVelocity = -17;
-                }
+					yVelocity = -17;
                 else
-                {
-                    yVelocity = -12;
-                }
+					yVelocity = -12;
 
                 falling = true;
             }
 			
 			falling = true;
-
+			
 			// Shooting
-			if(kbState.IsKeyDown(Keys.Space))
+			if (Utilities.SingleKeyPress(kbState, previousKbState, Keys.Space))
 			{
 				Fire();
 			}
+
+			base.Update(gameTime.ElapsedGameTime.Milliseconds);
 		}
 
         //A new Draw method for the player. Flips based on if the A or D button is pressed

@@ -70,16 +70,12 @@ namespace Inkcorperated
 			if(CanFire())
 			{
 				int x = 0;
-				int y = Height / 2;
+				int y = (Height / 2) + Y - 10;
 
 				if(Direction == 1)
-				{
-					x = X - 16;
-				}
+					x = X + Width + 5;
 				else if(Direction == -1)
-				{
-					x = X + Width;
-				}
+					x = X - 16;
 
 				// Sends info to make a bullet in the Map Controller class
 				controller.ShootBullet(new Rectangle(x, y, 16, 16), Team, Direction);

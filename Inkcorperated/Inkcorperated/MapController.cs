@@ -46,7 +46,7 @@ namespace Inkcorperated
             levels = new List<Map>();
             customBlocks = new List<Block>();
             selectedType = BlockType.Basic;
-            player = new Player(1, Teams.Player, 1, new Rectangle(), null, 0);
+            player = new Player(1, Teams.Player, 1, new Rectangle(), null, 0, 5);
 			enemies = new List<Enemy>();
             bullets = new List<Bullet>();
             invalidDrawCheck = false;
