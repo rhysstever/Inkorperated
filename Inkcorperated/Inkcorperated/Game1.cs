@@ -91,7 +91,7 @@ namespace Inkcorperated
 			spriteBatch = new SpriteBatch(GraphicsDevice);
             blankTexture = Content.Load<Texture2D>("block");
             controller.LoadLevels(Content.Load<Texture2D>("player_idle"), blankTexture, null, Content.Load<Texture2D>("goal"),
-                Content.Load<Texture2D>("Ink Bar"), Content.Load<Texture2D>("Ink Fill"), Content.Load<Texture2D>("Background01"), Content.Load<Texture2D>("bullet"));
+                Content.Load<Texture2D>("Ink Bar"), Content.Load<Texture2D>("Ink Fill"), Content.Load<Texture2D>("Background01"), Content.Load<Texture2D>("Bullet"));
 			player = controller.LevelPlayer;
             fontArial = Content.Load<SpriteFont>("fontArial");
 
