@@ -13,7 +13,17 @@ namespace Inkcorperated
         private Rectangle bounds;
         protected Texture2D texture;
 
-        public Rectangle Bounds { get{ return bounds; } }
+        public Rectangle Bounds
+        {
+            get
+            {
+                return bounds;
+            }
+            set
+            {
+                bounds = value;
+            }
+        }
 
         public int X
 		{

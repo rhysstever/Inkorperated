@@ -20,15 +20,24 @@ namespace Inkcorperated
         private int bulletDamage;
         private Teams team;
         private int direction;
+        private int velocity;
 
         public int Direction{ get{ return direction; } }
         public Teams Team{ get { return team; } }
+        public int Velocity { get { return velocity; } }
 
-        public Bullet(Rectangle bounds, Texture2D texture, Teams _team, int direction) : base(bounds, texture)
+        public Bullet(Rectangle bounds, Texture2D texture, Teams _team, int direction, int velocity) : base(bounds, texture)
         {
             bulletDamage = 1;
             this.direction = direction;
             team = _team; //Need to figure out how to deal with team
+            this.velocity = velocity;
+        }
+
+        public void Draw(SpriteBatch batch, GameTime gameTime)
+        {
+            batch.Draw(texture, Bounds, Color.White);
+            this.Bounds = new Rectangle((int)(Bounds.X + velocity * gameTime.ElapsedGameTime.TotalSeconds), Bounds.Y, Bounds.Width, Bounds.Height);
         }
     }
 }

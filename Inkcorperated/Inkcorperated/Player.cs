@@ -37,6 +37,14 @@ namespace Inkcorperated
             get { return inkLevels; }
             set { inkLevels = value; }
         }
+
+        public bool FacingRight
+        {
+            get
+            {
+                return facingRight;
+            }
+        }
 		
 		// Constructor
         
@@ -100,6 +108,16 @@ namespace Inkcorperated
 				yVelocity = -12;
 				falling = true;
 			}
+
+            //Shooting
+            //Calls entity fire method
+            if (kbState.IsKeyDown(Keys.Space) && Fire())
+            {
+                int dir = 1;
+                if (!facingRight)
+                    dir = -1;
+                //Bullet bullet = new Bullet(new Rectangle(Bounds.X + Bounds.Width + 5, Bounds.Y + Bounds.Height / 2, 25, 25), 
+            }
 		}
 
         //A new Draw method for the player. Flips based on if the A or D button is pressed
