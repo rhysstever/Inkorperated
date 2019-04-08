@@ -10,12 +10,35 @@ namespace Inkcorperated
 {
     class Entity : Drawable
     {
-        private float fireRate;
+		public static MapController controller;
+
+		private int health;
+		private Teams team;
+		private int direction;
+		private float fireRate;
         private double timeSinceLastShot;
 
-        public Entity(Rectangle bounds, Texture2D texture, float fireRate) : base(bounds, texture)
+		// Properties
+
+		public int Health
+		{
+			get { return health; }
+			set { health = value; }
+		}
+		public Teams Team { get { return team; } }
+		public int Direction
+		{
+			get { return direction; }
+			set { direction = value; }
+		}
+
+        public Entity(int health, Teams team, int direction, Rectangle bounds, Texture2D texture, float fireRate) 
+			: base(bounds, texture)
         {
-            this.fireRate = fireRate;
+			this.health = health;
+			this.fireRate = fireRate;
+			this.team = team;
+			this.direction = direction;
             timeSinceLastShot = 0;
         }
 
@@ -32,7 +55,7 @@ namespace Inkcorperated
         /// Resets the timeSinceLast fire if so
         /// </summary>
         /// <returns>If the entity can fire</returns>
-        public bool Fire()
+        public bool CanFire()
         {
             if(fireRate < timeSinceLastShot)
             {
@@ -41,6 +64,27 @@ namespace Inkcorperated
             }
             return false;
         }
+
+		public void Fire()
+		{
+			if(CanFire())
+			{
+				int x = 0;
+				int y = Height / 2;
+
+				if(Direction == 1)
+				{
+					x = X - 16;
+				}
+				else if(Direction == -1)
+				{
+					x = X + Width;
+				}
+
+				// Sends info to make a bullet in the Map Controller class
+				controller.ShootBullet(new Rectangle(x, y, 16, 16), Team, Direction);
+			}
+		}
 
         public bool Collided(Drawable other)
         {

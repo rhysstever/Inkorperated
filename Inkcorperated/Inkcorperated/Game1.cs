@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace Inkcorperated
 {
@@ -15,6 +17,7 @@ namespace Inkcorperated
     public enum GameStates
     {
         MainMenu,
+        LevelSelect,
         PauseMenu,
         Options,
         Game,
@@ -41,6 +44,15 @@ namespace Inkcorperated
 
         private SpriteFont fontArial;
 
+        Texture2D blankTexture;
+
+        private Button<GameStates> play;
+		private Button<GameStates> unpause;
+        private Button<GameStates> backToTitle;
+
+        private Drawable levelSelectBackground;
+        private List<Tuple<Button<int>, bool>> levelButtons;
+
         public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -59,10 +71,13 @@ namespace Inkcorperated
             
             currentGameState = GameStates.MainMenu;
 
-            controller = new MapController();
+            controller = new MapController(graphics);
 			collisionManager = new CollisionManager(controller);
             previousMouseState = new MouseState();
             previousKeyboardState = new KeyboardState();
+
+            levelButtons = new List<Tuple<Button<int>, bool>>();
+			Entity.controller = controller;
             base.Initialize();
 		}
 
@@ -74,10 +89,19 @@ namespace Inkcorperated
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
-            controller.LoadLevels(Content.Load<Texture2D>("player_idle"), Content.Load<Texture2D>("block"), null, Content.Load<Texture2D>("goal"),
-                Content.Load<Texture2D>("Ink Bar"), Content.Load<Texture2D>("Ink Fill"), Content.Load<Texture2D>("Bullet"));
+            blankTexture = Content.Load<Texture2D>("block");
+            controller.LoadLevels(Content.Load<Texture2D>("player_idle"), blankTexture, null, Content.Load<Texture2D>("goal"),
+                Content.Load<Texture2D>("Ink Bar"), Content.Load<Texture2D>("Ink Fill"), Content.Load<Texture2D>("Background01"), Content.Load<Texture2D>("bullet"));
 			player = controller.LevelPlayer;
             fontArial = Content.Load<SpriteFont>("fontArial");
+
+            play = new Button<GameStates>(new Rectangle(325, 250, 150, 50), blankTexture, SwitchGameState, GameStates.LevelSelect, "Play");
+			unpause = new Button<GameStates>(new Rectangle(325, 250, 150, 50), blankTexture, SwitchGameState, GameStates.Game, "Unpause");
+            backToTitle = new Button<GameStates>(new Rectangle(325, 325, 150, 50), blankTexture, SwitchGameState, GameStates.MainMenu, "Back to Title");
+
+            levelSelectBackground = new Drawable(new Rectangle(GraphicsDevice.Viewport.Width / 2 - 120, GraphicsDevice.Viewport.Height / 2 - 120, 240, 240), blankTexture);
+
+            controller.LoadLevel(0);
         }
 
 		/// <summary>
@@ -86,7 +110,7 @@ namespace Inkcorperated
 		/// </summary>
 		protected override void UnloadContent()
 		{
-			// TODO: Unload any non ContentManager content here
+			
 		}
 
 		/// <summary>
@@ -99,58 +123,89 @@ namespace Inkcorperated
             currentKBState = Keyboard.GetState();
             currentMouseState = Mouse.GetState();
 
-            // ----- Main Menu -----
-            if (currentGameState == GameStates.MainMenu)
-            {
-                if (SingleKeyPress(Keys.Enter))
-                {
-                    currentGameState = GameStates.Game;
-                    controller.LoadLevel(0);
-                    //ResetGame();
-                }
-            }
+			switch(currentGameState)
+			{
+				case GameStates.MainMenu:
+					// When clicked, switches GameState from MainMenu to the Game
+                    play.IsClicked(previousMouseState);
+					break;
 
-            // ----- Pause Menu -----
-            else if (currentGameState == GameStates.PauseMenu)
-            {
-                if (SingleKeyPress(Keys.Escape))
-                {
-                    currentGameState = GameStates.Game;
-                }
-            }
+                case GameStates.LevelSelect:
+                    foreach (Tuple<Button<int>, bool> b in levelButtons)
+                    {
+                        if(b.Item2)
+                            b.Item1.IsClicked(previousMouseState);
+                    }
+					if (SingleKeyPress(Keys.Escape))
+					{
+						currentGameState = GameStates.MainMenu;
+					}
+                    break;
 
-            // ----- Game -----
-            else if (currentGameState == GameStates.Game)
-            {
-                if (SingleKeyPress(Keys.Escape))
-                {
-                    currentGameState = GameStates.PauseMenu;
-                }
+                case GameStates.Options:
+					
+					break;
 
-                if (player.Y > GraphicsDevice.Viewport.Height)
-                {
-                    currentGameState = GameStates.GameOver;
-                }
+				case GameStates.Game:
+					if (SingleKeyPress(Keys.Escape))
+					{
+						currentGameState = GameStates.PauseMenu;
+					}
 
-				// Handles player movement
-                player.Move(gameTime);
-                //Handles drawing blocks
-                controller.CheckForRectDraw(previousMouseState, GraphicsDevice.Viewport.Bounds);
-				// Handles collisions between the player and all other collidables
-				collisionManager.Colliding();
-                //Handles switching block types
-                controller.CheckBlockTypeChange(previousKeyboardState);
-            }
+					if (player.Y > GraphicsDevice.Viewport.Height)
+					{
+						currentGameState = GameStates.GameOver;
+					}
 
-            // ----- Game Over -----
-            else if (currentGameState == GameStates.GameOver)
-            {
-                if (SingleKeyPress(Keys.Enter))
-                {
-                    currentGameState = GameStates.Game;
-                    controller.LoadLevel(0);
-                }
-            }
+					// Handles player movement
+					player.Move(gameTime);
+					//Handles drawing blocks
+					controller.CheckForRectDraw(previousMouseState, GraphicsDevice.Viewport.Bounds);
+					//Moves all of the bullets
+					foreach (Bullet b in controller.Bullets)
+					{
+						b.X += b.Direction;
+					}
+					// Handles collisions between the player and all other collidables
+					collisionManager.Colliding();
+					//Handles switching block types
+					controller.CheckBlockTypeChange(previousKeyboardState);
+					//Restarts the level if the player wants to
+					if (SingleKeyPress(Keys.R))
+						controller.ResetLevel();
+					break;
+
+				case GameStates.PauseMenu:
+					// When clicked, "unpauses" the game
+					// Changes GameState back from Pause to Game
+					unpause.IsClicked(previousMouseState);
+                    backToTitle.IsClicked(previousMouseState);
+                    if (SingleKeyPress(Keys.Escape))
+					{
+						currentGameState = GameStates.Game;
+					}
+					break;
+
+				case GameStates.GameOver:
+					if (SingleKeyPress(Keys.Enter))
+					{
+						currentGameState = GameStates.Game;
+						controller.LoadLevel(0);
+					}
+
+					if(collisionManager.isColliding(controller.LevelPlayer, controller.Goal))
+						if(!controller.NextLevel())
+							currentGameState = GameStates.GameWon;
+
+					break;
+
+				case GameStates.GameWon:
+					if (SingleKeyPress(Keys.Enter))
+					{
+						currentGameState = GameStates.MainMenu;
+					}
+					break;
+			}
             
             previousKeyboardState = currentKBState;
             previousMouseState = currentMouseState;
@@ -177,12 +232,24 @@ namespace Inkcorperated
                     new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Inkorporated").X / 2), GraphicsDevice.Viewport.Height / 4),
                     Color.White);
 
-                    // Writes the instructions
+                    //Draws the button
+                    play.Draw(spriteBatch, Color.Black, Color.White, fontArial);
+
+                    /* Writes the instructions
                     spriteBatch.DrawString(
                     fontArial,
                     "Hit 'Enter' to Start",
                     new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Start").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
                     Color.White);
+                    */
+                    break;
+
+                case GameStates.LevelSelect:
+                    levelSelectBackground.Draw(spriteBatch, Color.Black);
+                    foreach(Tuple<Button<int>, bool> b in levelButtons)
+                    {
+                        b.Item1.Draw(spriteBatch, b.Item2 ? Color.Gray : Color.Red, Color.Black, fontArial);
+                    }
                     break;
 
                 case GameStates.Game:
@@ -199,13 +266,19 @@ namespace Inkcorperated
                     new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Paused").X / 2), GraphicsDevice.Viewport.Height / 4),
                     Color.White);
 
-                    // Writes the instructions
+					// Draws "unpause" button
+					unpause.Draw(spriteBatch, Color.Black, Color.White, fontArial);
+
+                    //Draws "Back to Title" button
+                    backToTitle.Draw(spriteBatch, Color.Black, Color.White, fontArial);
+
+                    /* Writes the instructions
                     spriteBatch.DrawString(
                     fontArial,
                     "Hit 'Esc' to Return to Game.",
                     new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Esc' to Return to Game").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
-                    Color.White);
-                    break;
+                    Color.White); */
+                    break; 
 
                 case GameStates.GameOver:
                     GraphicsDevice.Clear(Color.Black);
@@ -224,11 +297,58 @@ namespace Inkcorperated
                     new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Return to Try Again.").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
                     Color.White);
                     break;
+				case GameStates.GameWon:
+					GraphicsDevice.Clear(Color.Black);
+
+					// Writes GameWon
+					spriteBatch.DrawString(
+					fontArial,
+					"Game Won",
+					new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Game Won").X / 2), GraphicsDevice.Viewport.Height / 4),
+					Color.White);
+
+					// Writes the instructions
+					spriteBatch.DrawString(
+					fontArial,
+					"Hit 'Enter' to Return to the Main Menu.",
+					new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Return to the Main Menu.").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
+					Color.White);
+					break;
             }
             spriteBatch.End();
 
 			base.Draw(gameTime);
 		}
+
+        private void EnterLevel(int levelID)
+        {
+            currentGameState = GameStates.Game;
+            controller.LoadLevel(levelID);
+        }
+
+        private void SwitchGameState(GameStates state)
+        {
+            currentGameState = state;
+            //Re-loads the level buttons
+            if(currentGameState == GameStates.LevelSelect)
+            {
+                levelButtons.Clear();
+
+                List<Tuple<int, bool>> mapData = controller.GetMapData();
+                int x = GraphicsDevice.Viewport.Width / 2 - 105;
+                int y = GraphicsDevice.Viewport.Height / 2 - 105;
+                foreach (Tuple<int, bool> data in mapData)
+                {
+                    levelButtons.Add(new Tuple<Button<int>, bool>(new Button<int>(new Rectangle(x, y, 20, 20), blankTexture, EnterLevel, data.Item1, "" + data.Item1), data.Item2));
+                    x += 30;
+                    if(x > GraphicsDevice.Viewport.Width / 2 + 105)
+                    {
+                        x = GraphicsDevice.Viewport.Width / 2 - 105;
+                        y += 30;
+                    }
+                }
+            }
+        }
 
         // Helper Methods
         /// <summary>

@@ -10,6 +10,20 @@ namespace Inkcorperated
 {
     class Enemy : Entity
     {
-        public Enemy(Rectangle bounds, Texture2D texture, float fireRate = 2.0f) : base(bounds, texture, fireRate) { }
+        // Fields
+        private int range;
+
+        // Properties
+        public int Range { get { return range; } }
+
+        // Constructor
+
+        public Enemy(int range, int health, Teams team, int direction, Rectangle bounds, Texture2D texture, float fireRate = 2.0f) 
+			: base(health, team, direction, bounds, texture, fireRate)
+        {
+            this.range = range;
+        }
+
+
     }
 }
