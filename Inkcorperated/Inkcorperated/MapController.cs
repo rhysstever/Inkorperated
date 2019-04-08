@@ -21,6 +21,7 @@ namespace Inkcorperated
         Texture2D playerTexture;
         Texture2D blockTexture;
         Texture2D enemyTexture;
+        Texture2D bulletTexture;
         Drawable inkContainer;
         Drawable inkFill;
         BlockType selectedType;
@@ -58,11 +59,12 @@ namespace Inkcorperated
         /// enemyX enemyY enemyWidth enemyHeight                --repeat for amtOfEnemies           |
         /// </summary>
         public void LoadLevels(Texture2D playerTexture, Texture2D blockTexture, Texture2D enemyTexture, Texture2D goalTexture,
-            Texture2D inkContainerTexture, Texture2D inkFillTexture)
+            Texture2D inkContainerTexture, Texture2D inkFillTexture, Texture2D bulletTexture)
         {
             this.playerTexture = playerTexture;
             this.blockTexture = blockTexture;
             this.enemyTexture = enemyTexture;
+            this.bulletTexture = bulletTexture;
             inkContainer = new Drawable(new Rectangle(400, 30, 2, 2), inkContainerTexture);
             inkFill = new Drawable(new Rectangle(20, 20, 10, 50), inkFillTexture);
             //Sets up the goal to have the goal texture

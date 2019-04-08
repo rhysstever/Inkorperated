@@ -75,7 +75,7 @@ namespace Inkcorperated
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch(GraphicsDevice);
             controller.LoadLevels(Content.Load<Texture2D>("player_idle"), Content.Load<Texture2D>("block"), null, Content.Load<Texture2D>("goal"),
-                Content.Load<Texture2D>("Ink Bar"), Content.Load<Texture2D>("Ink Fill"));
+                Content.Load<Texture2D>("Ink Bar"), Content.Load<Texture2D>("Ink Fill"), Content.Load<Texture2D>("Bullet"));
 			player = controller.LevelPlayer;
             fontArial = Content.Load<SpriteFont>("fontArial");
         }
