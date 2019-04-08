@@ -11,8 +11,8 @@ namespace Inkcorperated
 {
     class Player : Entity
     {
-		// Fields
-
+        // Fields
+        private int inkCapacity;
 		private int inkLevels;
 		private int yVelocity;
 		private bool falling;
@@ -37,6 +37,11 @@ namespace Inkcorperated
             get { return inkLevels; }
             set { inkLevels = value; }
         }
+        public int InkCapacity
+        {
+            get { return inkCapacity; }
+            set { inkCapacity = value; }
+        }
 
         public bool JumpBoost { get { return jumpBoost; } set { jumpBoost = value; } }
         public bool SpeedBoost { get { return speedBoost; } set { speedBoost = value; } }
@@ -52,6 +57,7 @@ namespace Inkcorperated
 		public Player(int health, Teams team, int direction, Rectangle bounds, Texture2D texture, int inkLevels, float fireRate = 1.0f) 
 			: base(health, team, direction, bounds, texture, fireRate)
 		{
+            inkCapacity = inkLevels;
 			this.inkLevels = inkLevels; // starting value of ink (can be changed for balancing)
 			yVelocity = 0;
 			falling = false;
@@ -64,6 +70,7 @@ namespace Inkcorperated
         /// </summary>
         public void UpdatePlayer(Rectangle bounds, Texture2D texture, int inkLevels)
         {
+            inkCapacity = inkLevels;
             this.inkLevels = inkLevels;
             yVelocity = 0;
             falling = false;
@@ -121,7 +128,7 @@ namespace Inkcorperated
 			falling = true;
 			
 			// Shooting
-			if (Utilities.SingleKeyPress(kbState, previousKbState, Keys.Space))
+			if (Utilities.SingleKeyPress(kbState, previousKbState, Keys.Space) && inkLevels > 0)
 			{
 				Fire();
 				inkLevels -= 2;

@@ -28,6 +28,7 @@ namespace Inkcorperated
         Drawable inkFill;
         BlockType selectedType;
         GraphicsDeviceManager graphics;
+        
 
         bool invalidDrawCheck;
 
@@ -74,8 +75,8 @@ namespace Inkcorperated
             this.enemyTexture = enemyTexture;
             background = bgPic;
 			bulletTexture = bulletPic;
-            inkContainer = new Drawable(new Rectangle(400, 30, 2, 2), inkContainerTexture);
-            inkFill = new Drawable(new Rectangle(20, 20, 10, 50), inkFillTexture);
+            inkContainer = new Drawable(new Rectangle(20, 50, 10, 50), inkContainerTexture);
+            inkFill = new Drawable(new Rectangle(20, 50, 10, 50), inkFillTexture);
             //Sets up the goal to have the goal texture
             goal = new Drawable(new Rectangle(), goalTexture);
             for(int i = 1; i < i + 1; i++)
@@ -163,7 +164,8 @@ namespace Inkcorperated
 
         public void ShootBullet(Rectangle bounds, Teams team, int direction)
         {
-			bullets.Add(new Bullet(bounds, bulletTexture, team, direction));
+			bullets.Add(new Bullet(bounds, bulletTexture, team, direction, 5));
+            inkFill.Bounds = new Rectangle(inkFill.X, inkFill.Y + (inkFill.Height - ((player.InkLevels * 50 / player.InkCapacity))), inkFill.Width, ((player.InkLevels * 50 / player.InkCapacity)));
         }
 
         public void CheckBlockTypeChange(KeyboardState previousKeyboardState)
@@ -266,7 +268,8 @@ namespace Inkcorperated
             goal.Draw(batch, Color.White);
             player.Draw(batch, Color.White);
 
-            /* Ink level bar not functional yet
+            // Ink level bar not functional yet
+            
             switch (selectedType)
             {
                 case BlockType.Basic:
@@ -285,7 +288,7 @@ namespace Inkcorperated
                     inkFill.Draw(batch, Color.Black);
                     inkContainer.Draw(batch, Color.White);
                     break;
-            }*/
+            }
 
             foreach(Bullet b in bullets)
             {
