@@ -124,6 +124,7 @@ namespace Inkcorperated
 			if (Utilities.SingleKeyPress(kbState, previousKbState, Keys.Space))
 			{
 				Fire();
+				inkLevels -= 2;
 			}
 
 			base.Update(gameTime.ElapsedGameTime.Milliseconds);

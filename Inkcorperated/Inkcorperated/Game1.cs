@@ -255,7 +255,13 @@ namespace Inkcorperated
 
                 case GameStates.Game:
                     controller.Draw(spriteBatch);
-                    break;
+					// Writes the current ink level
+					spriteBatch.DrawString(
+					fontArial,
+					"Ink Level: " + controller.LevelPlayer.InkLevels,
+					new Vector2(10, 10),
+					Color.Black);
+					break;
 
                 case GameStates.PauseMenu:
                     GraphicsDevice.Clear(Color.MediumPurple);
