@@ -18,6 +18,7 @@ namespace LevelEditor
         Speed,
         Bouncy,
         Player,
+        Enemy,
         Goal
     }
 
@@ -29,6 +30,8 @@ namespace LevelEditor
 
         Image player;
         Image goal;
+        Image enemyRight;
+        Image enemyLeft;
 
         Tuple<int, int> playerPos = new Tuple<int, int>(-1, -1);
         Tuple<int, int> goalPos = new Tuple<int, int>(-1, -1);
@@ -47,6 +50,9 @@ namespace LevelEditor
             InitializeComponent();
             player = Player.BackgroundImage;
             goal = Goal.BackgroundImage;
+            enemyRight = Enemy.BackgroundImage;
+            enemyLeft = (Image)Enemy.BackgroundImage.Clone();
+            enemyLeft.RotateFlip(RotateFlipType.RotateNoneFlipX);
             GenerateTiles();
         }
 
@@ -119,6 +125,10 @@ namespace LevelEditor
                             file.Write(4);
                         else if (visualMap[x, y].BackgroundImage == goal)
                             file.Write(5);
+                        else if (visualMap[x, y].BackgroundImage == enemyRight)
+                            file.Write(6);
+                        else if (visualMap[x, y].BackgroundImage == enemyLeft)
+                            file.Write(7);
                     }
                 }
             }
@@ -161,6 +171,14 @@ namespace LevelEditor
                         visualMap[x, y].BackgroundImage = goal;
                         goalPos = new Tuple<int, int>(x, y);
                     }
+                    else if (value == 6)
+                    {
+                        visualMap[x, y].BackgroundImage = enemyRight;
+                    }
+                    else if (value == 7)
+                    {
+                        visualMap[x, y].BackgroundImage = enemyLeft;
+                    }
                 }
             }
             file.Close();
@@ -201,6 +219,11 @@ namespace LevelEditor
                 editType = BlockTypes.Goal;
                 CurrentTile.BackgroundImage = goal;
             }
+            else if (((Button)sender).Name == "Enemy")
+            {
+                editType = BlockTypes.Enemy;
+                CurrentTile.BackgroundImage = enemyRight;
+            }
             else if (((Button)sender).Name == "Eraser")
             {
                 editType = BlockTypes.Empty;
@@ -216,6 +239,25 @@ namespace LevelEditor
                 playerPos = new Tuple<int, int>(-1, -1);
             if (goalPos.ToString().Equals("(" + ((PictureBox)sender).Name + ")"))
                 goalPos = new Tuple<int, int>(-1, -1);
+            if(editType == BlockTypes.Enemy)
+            {
+                if(((PictureBox)sender).BackgroundImage == enemyLeft)
+                {
+                    ((PictureBox)sender).BackgroundImage = enemyRight;
+                    if (!changed)
+                        ActiveForm.Text += " *";
+                    changed = true;
+                    return;
+                }
+                if (((PictureBox)sender).BackgroundImage == enemyRight)
+                {
+                    ((PictureBox)sender).BackgroundImage = enemyLeft;
+                    if (!changed)
+                        ActiveForm.Text += " *";
+                    changed = true;
+                    return;
+                }
+            }
             ((PictureBox)sender).BackgroundImage = null;
             ((PictureBox)sender).BackColor = Color.Transparent;
             switch (editType)
@@ -241,6 +283,9 @@ namespace LevelEditor
                     if (goalPos.Item1 != -1 && goalPos.Item2 != -1)
                         visualMap[goalPos.Item1, goalPos.Item2].BackgroundImage = null;
                     goalPos = new Tuple<int, int>(int.Parse(((PictureBox)sender).Name.Substring(0, ((PictureBox)sender).Name.IndexOf(','))), int.Parse(((PictureBox)sender).Name.Substring(((PictureBox)sender).Name.IndexOf(' ') + 1)));
+                    break;
+                case BlockTypes.Enemy:
+                    ((PictureBox)sender).BackgroundImage = enemyRight;
                     break;
             }
             if(!changed)

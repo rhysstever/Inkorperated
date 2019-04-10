@@ -43,6 +43,7 @@
             this.Map = new System.Windows.Forms.GroupBox();
             this.InkLimit = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
+            this.Enemy = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentTile)).BeginInit();
@@ -51,6 +52,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.Enemy);
             this.groupBox1.Controls.Add(this.Eraser);
             this.groupBox1.Controls.Add(this.Goal);
             this.groupBox1.Controls.Add(this.Player);
@@ -59,7 +61,7 @@
             this.groupBox1.Controls.Add(this.BasicBlock);
             this.groupBox1.Location = new System.Drawing.Point(3, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(120, 188);
+            this.groupBox1.Size = new System.Drawing.Size(120, 236);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Block Selector";
@@ -69,7 +71,7 @@
             this.Eraser.BackColor = System.Drawing.Color.Transparent;
             this.Eraser.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("Eraser.BackgroundImage")));
             this.Eraser.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.Eraser.Location = new System.Drawing.Point(62, 131);
+            this.Eraser.Location = new System.Drawing.Point(6, 180);
             this.Eraser.Name = "Eraser";
             this.Eraser.Size = new System.Drawing.Size(50, 50);
             this.Eraser.TabIndex = 5;
@@ -81,7 +83,7 @@
             this.Goal.BackColor = System.Drawing.Color.Transparent;
             this.Goal.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("Goal.BackgroundImage")));
             this.Goal.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.Goal.Location = new System.Drawing.Point(6, 131);
+            this.Goal.Location = new System.Drawing.Point(6, 127);
             this.Goal.Name = "Goal";
             this.Goal.Size = new System.Drawing.Size(50, 50);
             this.Goal.TabIndex = 4;
@@ -133,7 +135,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.CurrentTile);
-            this.groupBox2.Location = new System.Drawing.Point(3, 194);
+            this.groupBox2.Location = new System.Drawing.Point(3, 242);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(120, 120);
             this.groupBox2.TabIndex = 1;
@@ -152,7 +154,7 @@
             // 
             // Save
             // 
-            this.Save.Location = new System.Drawing.Point(15, 388);
+            this.Save.Location = new System.Drawing.Point(15, 404);
             this.Save.Name = "Save";
             this.Save.Size = new System.Drawing.Size(95, 50);
             this.Save.TabIndex = 2;
@@ -162,7 +164,7 @@
             // 
             // Load
             // 
-            this.Load.Location = new System.Drawing.Point(15, 454);
+            this.Load.Location = new System.Drawing.Point(15, 460);
             this.Load.Name = "Load";
             this.Load.Size = new System.Drawing.Size(95, 50);
             this.Load.TabIndex = 3;
@@ -181,7 +183,7 @@
             // 
             // InkLimit
             // 
-            this.InkLimit.Location = new System.Drawing.Point(33, 346);
+            this.InkLimit.Location = new System.Drawing.Point(33, 378);
             this.InkLimit.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -204,11 +206,22 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(30, 330);
+            this.label1.Location = new System.Drawing.Point(30, 362);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(46, 13);
             this.label1.TabIndex = 6;
             this.label1.Text = "Ink Limit";
+            // 
+            // Enemy
+            // 
+            this.Enemy.BackColor = System.Drawing.Color.Transparent;
+            this.Enemy.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("Enemy.BackgroundImage")));
+            this.Enemy.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Enemy.Location = new System.Drawing.Point(62, 127);
+            this.Enemy.Name = "Enemy";
+            this.Enemy.Size = new System.Drawing.Size(50, 50);
+            this.Enemy.TabIndex = 6;
+            this.Enemy.UseVisualStyleBackColor = false;
             // 
             // window
             // 
@@ -250,5 +263,6 @@
         private System.Windows.Forms.Button Eraser;
         private System.Windows.Forms.NumericUpDown InkLimit;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button Enemy;
     }
 }

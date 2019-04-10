@@ -105,15 +105,6 @@ namespace Inkcorperated
         }
 
 		/// <summary>
-		/// UnloadContent will be called once per game and is the place to unload
-		/// game-specific content.
-		/// </summary>
-		protected override void UnloadContent()
-		{
-			
-		}
-
-		/// <summary>
 		/// Allows the game to run logic such as updating the world,
 		/// checking for collisions, gathering input, and playing audio.
 		/// </summary>
@@ -126,7 +117,7 @@ namespace Inkcorperated
 			switch(currentGameState)
 			{
 				case GameStates.MainMenu:
-					// When clicked, switches GameState from MainMenu to the Game
+					// When clicked, switches GameState from MainMenu to the level select
                     play.IsClicked(previousMouseState);
 					break;
 
@@ -136,7 +127,7 @@ namespace Inkcorperated
                         if(b.Item2)
                             b.Item1.IsClicked(previousMouseState);
                     }
-					if (SingleKeyPress(Keys.Escape))
+					if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.Escape))
 					{
 						currentGameState = GameStates.MainMenu;
 					}
@@ -147,7 +138,7 @@ namespace Inkcorperated
 					break;
 
 				case GameStates.Game:
-					if (SingleKeyPress(Keys.Escape))
+					if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.Escape))
 					{
 						currentGameState = GameStates.PauseMenu;
 					}
@@ -171,7 +162,7 @@ namespace Inkcorperated
 					//Handles switching block types
 					controller.CheckBlockTypeChange(previousKeyboardState);
 					//Restarts the level if the player wants to
-					if (SingleKeyPress(Keys.R))
+					if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.R))
 						controller.ResetLevel();
 					break;
 
@@ -180,18 +171,15 @@ namespace Inkcorperated
 					// Changes GameState back from Pause to Game
 					unpause.IsClicked(previousMouseState);
                     backToTitle.IsClicked(previousMouseState);
-                    if (SingleKeyPress(Keys.Escape))
+                    if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.Escape))
 					{
 						currentGameState = GameStates.Game;
 					}
 					break;
 
 				case GameStates.GameOver:
-					if (SingleKeyPress(Keys.Enter))
-					{
-						currentGameState = GameStates.Game;
-						controller.LoadLevel(0);
-					}
+					if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.Enter))
+						currentGameState = GameStates.MainMenu;
 
 					if(collisionManager.isColliding(controller.LevelPlayer, controller.Goal))
 						if(!controller.NextLevel())
@@ -200,7 +188,7 @@ namespace Inkcorperated
 					break;
 
 				case GameStates.GameWon:
-					if (SingleKeyPress(Keys.Enter))
+					if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.Enter))
 					{
 						currentGameState = GameStates.MainMenu;
 					}
@@ -353,24 +341,6 @@ namespace Inkcorperated
                         y += 30;
                     }
                 }
-            }
-        }
-
-        // Helper Methods
-        /// <summary>
-        /// Returns true if this is the first frame that the key was pressed
-        /// False otherwise
-        /// </summary>
-        /// <param name="key">Represents the key to check (One of the "Keys" enum values)</param>
-        public bool SingleKeyPress(Keys key)
-        {
-            if (currentKBState.IsKeyDown(key) && previousKeyboardState.IsKeyUp(key))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
             }
         }
     }
