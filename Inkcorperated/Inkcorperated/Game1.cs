@@ -165,7 +165,6 @@ namespace Inkcorperated
 					foreach (Bullet b in controller.Bullets)
 					{
 						b.X += b.Direction * 5;
-						Console.WriteLine(b.X + " " + b.Y);
 					}
 					// Handles collisions between the player and all other collidables
 					collisionManager.Colliding();
