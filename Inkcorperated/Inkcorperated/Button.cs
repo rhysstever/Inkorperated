@@ -18,7 +18,8 @@ namespace Inkcorperated
         private T1 passValue;
         private string text;
 
-        public Button(Rectangle bounds, Texture2D texture, OnClick function, T1 value, string text) : base(bounds, texture)
+        public Button(Rectangle bounds, Texture2D texture, OnClick function, T1 value, string text) 
+			: base(bounds, texture)
         {
             onClick = function;
             passValue = value;

@@ -47,6 +47,7 @@ namespace Inkcorperated
         Texture2D blankTexture;
 
         private Button<GameStates> play;
+		private Button<GameStates> options;
 		private Button<GameStates> unpause;
         private Button<GameStates> backToTitle;
 
@@ -96,8 +97,9 @@ namespace Inkcorperated
             fontArial = Content.Load<SpriteFont>("fontArial");
 
             play = new Button<GameStates>(new Rectangle(325, 250, 150, 50), blankTexture, SwitchGameState, GameStates.LevelSelect, "Play");
+			options = new Button<GameStates>(new Rectangle(325, 350, 150, 50), blankTexture, SwitchGameState, GameStates.Options, "Controls");
 			unpause = new Button<GameStates>(new Rectangle(325, 250, 150, 50), blankTexture, SwitchGameState, GameStates.Game, "Unpause");
-            backToTitle = new Button<GameStates>(new Rectangle(325, 325, 150, 50), blankTexture, SwitchGameState, GameStates.MainMenu, "Back to Title");
+            backToTitle = new Button<GameStates>(new Rectangle(325, 325, 175, 50), blankTexture, SwitchGameState, GameStates.MainMenu, "Back to Title");
 
             levelSelectBackground = new Drawable(new Rectangle(GraphicsDevice.Viewport.Width / 2 - 120, GraphicsDevice.Viewport.Height / 2 - 120, 240, 240), blankTexture);
 
@@ -119,6 +121,7 @@ namespace Inkcorperated
 				case GameStates.MainMenu:
 					// When clicked, switches GameState from MainMenu to the level select
                     play.IsClicked(previousMouseState);
+					options.IsClicked(previousMouseState);
 					break;
 
                 case GameStates.LevelSelect:
@@ -134,7 +137,7 @@ namespace Inkcorperated
                     break;
 
                 case GameStates.Options:
-					
+					backToTitle.IsClicked(previousMouseState);
 					break;
 
 				case GameStates.Game:
@@ -164,6 +167,11 @@ namespace Inkcorperated
 					//Restarts the level if the player wants to
 					if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.R))
 						controller.ResetLevel();
+					// Game Win condition
+					if (collisionManager.isColliding(controller.LevelPlayer, controller.Goal))
+						if (!controller.NextLevel())
+							currentGameState = GameStates.GameWon;
+
 					break;
 
 				case GameStates.PauseMenu:
@@ -180,18 +188,10 @@ namespace Inkcorperated
 				case GameStates.GameOver:
 					if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.Enter))
 						currentGameState = GameStates.MainMenu;
-
-					if(collisionManager.isColliding(controller.LevelPlayer, controller.Goal))
-						if(!controller.NextLevel())
-							currentGameState = GameStates.GameWon;
-
 					break;
 
 				case GameStates.GameWon:
-					if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.Enter))
-					{
-						currentGameState = GameStates.MainMenu;
-					}
+					backToTitle.IsClicked(previousMouseState);
 					break;
 			}
             
@@ -220,17 +220,29 @@ namespace Inkcorperated
                     new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Inkorporated").X / 2), GraphicsDevice.Viewport.Height / 4),
                     Color.White);
 
-                    //Draws the button
+                    //Draws buttons
                     play.Draw(spriteBatch, Color.Black, Color.White, fontArial);
-
-                    /* Writes the instructions
-                    spriteBatch.DrawString(
-                    fontArial,
-                    "Hit 'Enter' to Start",
-                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Start").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
-                    Color.White);
-                    */
+					options.Draw(spriteBatch, Color.Black, Color.White, fontArial);
+                   
                     break;
+				case GameStates.Options:
+					// ***Controls***
+					spriteBatch.DrawString(fontArial, "Controls:", new Vector2(20, 20), Color.White);
+
+					spriteBatch.DrawString(fontArial, "A - Move left", new Vector2(20, 80), Color.White);
+					
+					spriteBatch.DrawString(fontArial, "D - Move right", new Vector2(20, 115), Color.White);
+
+					spriteBatch.DrawString(fontArial, "W - Jump", new Vector2(20, 150), Color.White);
+
+					spriteBatch.DrawString(fontArial, "Space - Shoot", new Vector2(20, 185), Color.White);
+
+					spriteBatch.DrawString(fontArial, "1/2/3 - Change ink color (black/blue/red)", new Vector2(20, 220), Color.White);
+
+					spriteBatch.DrawString(fontArial, "Q/E - Cycle between ink colors", new Vector2(20, 255), Color.White);
+
+					backToTitle.Draw(spriteBatch, Color.Black, Color.White, fontArial);
+					break;
 
                 case GameStates.LevelSelect:
                     levelSelectBackground.Draw(spriteBatch, Color.Black);
@@ -243,8 +255,7 @@ namespace Inkcorperated
                 case GameStates.Game:
                     controller.Draw(spriteBatch);
 					// Writes the current ink level
-					spriteBatch.DrawString(
-					fontArial,
+					spriteBatch.DrawString(fontArial, 
 					"Ink Level: " + controller.LevelPlayer.InkLevels,
 					new Vector2(10, 10),
 					Color.Black);
@@ -292,23 +303,18 @@ namespace Inkcorperated
                     Color.White);
                     break;
 				case GameStates.GameWon:
-					GraphicsDevice.Clear(Color.Black);
+					GraphicsDevice.Clear(Color.Gold);
 
 					// Writes GameWon
 					spriteBatch.DrawString(
 					fontArial,
 					"Game Won",
 					new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Game Won").X / 2), GraphicsDevice.Viewport.Height / 4),
-					Color.White);
+					Color.Black);
 
-					// Writes the instructions
-					spriteBatch.DrawString(
-					fontArial,
-					"Hit 'Enter' to Return to the Main Menu.",
-					new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Return to the Main Menu.").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
-					Color.White);
+					backToTitle.Draw(spriteBatch, Color.Black, Color.White, fontArial);
 					break;
-            }
+			}
             spriteBatch.End();
 
 			base.Draw(gameTime);

@@ -29,7 +29,6 @@ namespace Inkcorperated
         BlockType selectedType;
         GraphicsDeviceManager graphics;
         
-
         bool invalidDrawCheck;
 
 		// Properties
