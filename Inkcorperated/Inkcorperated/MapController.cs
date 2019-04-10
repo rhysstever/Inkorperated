@@ -75,8 +75,8 @@ namespace Inkcorperated
             this.enemyTexture = enemyTexture;
             background = bgPic;
 			bulletTexture = bulletPic;
-            inkContainer = new Drawable(new Rectangle(20, 50, 10, 50), inkContainerTexture);
-            inkFill = new Drawable(new Rectangle(20, 50, 10, 50), inkFillTexture);
+            inkContainer = new Drawable(new Rectangle(20, 50, 20, 100), inkContainerTexture);
+            inkFill = new Drawable(new Rectangle(20, 50, 20, 100), inkFillTexture);
             //Sets up the goal to have the goal texture
             goal = new Drawable(new Rectangle(), goalTexture);
             for(int i = 1; i < i + 1; i++)
@@ -165,7 +165,9 @@ namespace Inkcorperated
         public void ShootBullet(Rectangle bounds, Teams team, int direction)
         {
 			bullets.Add(new Bullet(bounds, bulletTexture, team, direction, 5));
-            inkFill.Bounds = new Rectangle(inkFill.X, inkFill.Y + (inkFill.Height - ((player.InkLevels * 50 / player.InkCapacity))), inkFill.Width, ((player.InkLevels * 50 / player.InkCapacity)));
+
+            //Change Ink Fill Rect based on ink levels
+            inkFill.Bounds = new Rectangle(inkFill.X, inkFill.Y + (inkFill.Height - ((player.InkLevels * 100 / player.InkCapacity))), inkFill.Width, ((player.InkLevels * 100 / player.InkCapacity)));
         }
 
         public void CheckBlockTypeChange(KeyboardState previousKeyboardState)
@@ -267,8 +269,6 @@ namespace Inkcorperated
             levels[currentLevel].Draw(batch);
             goal.Draw(batch, Color.White);
             player.Draw(batch, Color.White);
-
-            // Ink level bar not functional yet
             
             switch (selectedType)
             {
