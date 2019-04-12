@@ -52,6 +52,7 @@ namespace Inkcorperated
         private Button<GameStates> backToTitle;
 
         private Drawable levelSelectBackground;
+        private Drawable mainMenuBackground;
         private List<Tuple<Button<int>, bool>> levelButtons;
 
         public Game1()
@@ -79,6 +80,7 @@ namespace Inkcorperated
 
             levelButtons = new List<Tuple<Button<int>, bool>>();
 			Entity.controller = controller;
+
             base.Initialize();
 		}
 
@@ -102,6 +104,7 @@ namespace Inkcorperated
             backToTitle = new Button<GameStates>(new Rectangle(325, 325, 175, 50), blankTexture, SwitchGameState, GameStates.MainMenu, "Back to Title");
 
             levelSelectBackground = new Drawable(new Rectangle(GraphicsDevice.Viewport.Width / 2 - 120, GraphicsDevice.Viewport.Height / 2 - 120, 240, 240), blankTexture);
+            mainMenuBackground = new Drawable(new Rectangle(graphics.GraphicsDevice.Viewport.X, graphics.GraphicsDevice.Viewport.Y, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Content.Load<Texture2D>("MainMenu"));
 
             controller.LoadLevel(0);
         }
@@ -213,12 +216,13 @@ namespace Inkcorperated
             switch (currentGameState)
             {
                 case GameStates.MainMenu:
+                    mainMenuBackground.Draw(spriteBatch, Color.White);
                     // Writes the title
-                    spriteBatch.DrawString(
-                    fontArial,
-                    "Inkorporated",
-                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Inkorporated").X / 2), GraphicsDevice.Viewport.Height / 4),
-                    Color.White);
+                    //spriteBatch.DrawString(
+                    //fontArial,
+                    //"Inkorporated",
+                    //new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Inkorporated").X / 2), GraphicsDevice.Viewport.Height / 4),
+                    //Color.White);
 
                     //Draws buttons
                     play.Draw(spriteBatch, Color.Black, Color.White, fontArial);
