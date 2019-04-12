@@ -47,17 +47,13 @@ namespace Inkcorperated
         /// </summary>
         public void checkBlockType(int i)
         {
+            controller.LevelPlayer.JumpBoost = false;
+            controller.LevelPlayer.SpeedBoost = false;
             // Handling block types...
-            if (allBlocks[i].Type == BlockType.Basic)
-            {
-                controller.LevelPlayer.JumpBoost = false;
-                controller.LevelPlayer.SpeedBoost = false;
-            }
-            else if (allBlocks[i].Type == BlockType.Bouncy)
+            if (allBlocks[i].Type == BlockType.Bouncy)
             {
                 controller.LevelPlayer.JumpBoost = true;
             }
-
             else if (allBlocks[i].Type == BlockType.Speed)
             {
                 controller.LevelPlayer.SpeedBoost = true;

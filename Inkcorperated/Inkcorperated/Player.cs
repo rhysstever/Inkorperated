@@ -110,7 +110,7 @@ namespace Inkcorperated
 			if(falling)
 			{
 				Y += yVelocity;
-				yVelocity = yVelocity + GRAVITY;
+				yVelocity = Math.Min(yVelocity + GRAVITY, 17);
 			}
 
 			// Jumping
