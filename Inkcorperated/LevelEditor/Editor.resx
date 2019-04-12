@@ -120,17 +120,17 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="Enemy.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAACQAAAAzCAYAAAD/06q7AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAIUSURBVFhH7ZQ9TsNAFIRzi5wA0aVCnCCngFvlFrQpOENKGlrcIIGQQunWMMsba/zYjf/WPxKM
-        NPL6vd15n53Imz6qPp6r4M+XykrLqAZRLwUVhaGXgIqC0HMDlU8PcRBn2z69ANQFqizLYDuWVwwPNqA2
-        KD1jMXmkwa9v7z/rFiA9A1vUeGkoYGogOAEVO2Nx46TBOqBRMyiCNXrfxv7T6ZQXiE/JNev04/VNsK/D
-        XYDO53M7cCxYwVjDFTDF1W1d1z5gUkAA6eLdbldFfy54CBDWxtAQhhVF0epWIAxRsCFAscEphwM+XN0V
-        iPtwDaEiHXg8HpO27WkghPcFIhTXsAexsWn5cLoPkALomXB13zAbm5YPp/VJWRsCVH9EDcrGpuXD6SFA
-        ODP5G9JaFyCuWT8cDsGTAnkoD6Hmn7kTDKTB6r5AuFrkeGk43QeItrjxioWvEkjv9/t9MGBw1R5tceMV
-        C/dA93d3DWuPtrjxwk/jnQLC25kFSINXAeStQISJAbFuUfnELynNgZeAtA5bVD51Abpki8knBYoNpPmW
-        vC0mn2JDvAGzGiDCrAJIYRYHIgT2LA6kMNBsQLEBHgZaDEgH25ZaKShr55EP51BrN+SBuLZ2HnkQ2Fq/
-        xP4sQBxwCQjyULC18qgPDLQ6IOjvAlmpVYSfDIgDrNRJkwP1DeZDZAfabrcVbLe9NOZsUv9AUW02X3du
-        797zcWQvAAAAAElFTkSuQmCC
+        iVBORw0KGgoAAAANSUhEUgAAACQAAAAzCAYAAAD/06q7AAAABGdBTUEAALGPC/xhBQAAAhRJREFUWEft
+        lD1Ow0AUhHOLnADRpUKcIKeAW+UWtCk4Q0oaWtwggZBC6dYwyxtr/NiN/9Y/Eow08vq93XmfncibPqo+
+        nqvgz5fKSsuoBlEvBRWFoZeAioLQcwOVTw9xEGfbPr0A1AWqLMtgO5ZXDA82oDYoPWMxeaTBr2/vP+sW
+        ID0DW9R4aShgaiA4ARU7Y3HjpME6oFEzKII1et/G/tPplBeIT8k16/Tj9U2wr8NdgM7ncztwLFjBWMMV
+        MMXVbV3XPmBSQADp4t1uV0V/LngIENbG0BCGFUXR6lYgDFGwIUCxwSmHAz5c3RWI+3ANoSIdeDwek7bt
+        aSCE9wUiFNewB7Gxaflwug+QAuiZcHXfMBublg+n9UlZGwJUf0QNysam5cPpIUA4M/kb0loXIK5ZPxwO
+        wZMCeSgPoeafuRMMpMHqvkC4WuR4aTjdB4i2uPGKha8SSO/3+30wYHDVHm1x4xUL90D3d3cNa4+2uPHC
+        T+OdAsLbmQVIg1cB5K1AhIkBsW5R+cQvKc2Bl4C0DltUPnUBumSLyScFig2k+Za8LSafYkO8AbMaIMKs
+        AkhhFgciBPYsDqQw0GxAsQEeBloMSAfbllopKGvnkQ/nUGs35IG4tnYeeRDYWr/E/ixAHHAJCPJQsLXy
+        qA8MtDog6O8CWalVhJ8MiAOs1EmTA/UN5kNkB9putxVst7005mxS/0BRbTZfd27v3vNxZC8AAAAASUVO
+        RK5CYII=
 </value>
   </data>
   <data name="Eraser.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

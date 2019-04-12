@@ -249,7 +249,7 @@ namespace LevelEditor
                     changed = true;
                     return;
                 }
-                if (((PictureBox)sender).BackgroundImage == enemyRight)
+                else if (((PictureBox)sender).BackgroundImage == enemyRight)
                 {
                     ((PictureBox)sender).BackgroundImage = enemyLeft;
                     if (!changed)

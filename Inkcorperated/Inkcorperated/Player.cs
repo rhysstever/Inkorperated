@@ -54,8 +54,8 @@ namespace Inkcorperated
 		/// <param name="bounds">The hitbox of the player</param>
 		/// <param name="texture">The visual of the player</param>
 		/// <param name="fireRate">How often the player is allowed to shoot</param>
-		public Player(int health, Teams team, int direction, Rectangle bounds, Texture2D texture, int inkLevels, float fireRate = 1.0f) 
-			: base(health, team, direction, bounds, texture, fireRate)
+		public Player(int health, int direction, Rectangle bounds, Texture2D texture, int inkLevels, float fireRate = 1.0f) 
+			: base(health, Teams.Player, direction, bounds, texture, fireRate)
 		{
             inkCapacity = inkLevels;
 			this.inkLevels = inkLevels; // starting value of ink (can be changed for balancing)

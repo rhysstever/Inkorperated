@@ -46,7 +46,7 @@ namespace Inkcorperated
             levels = new List<Map>();
             customBlocks = new List<Block>();
             selectedType = BlockType.Basic;
-            player = new Player(1, Teams.Player, 1, new Rectangle(), null, 0, 5);
+            player = new Player(1, 1, new Rectangle(), null, 0, 5);
 			enemies = new List<Enemy>();
             bullets = new List<Bullet>();
             invalidDrawCheck = false;
@@ -100,6 +100,10 @@ namespace Inkcorperated
                                 newMap.PlayerStart = new Rectangle(x * 20, y * 20, 20, 20);
                             else if (value == 5)
                                 newMap.Goal = new Rectangle(x * 20, y * 20, 20, 20);
+                            else if (value == 6)
+                                newMap.AddEnemy(new Enemy(5, 1, 1, new Rectangle(x * 20, y * 20, 20, 20), enemyTexture));
+                            else if (value == 6)
+                                newMap.AddEnemy(new Enemy(5, 1, -1, new Rectangle(x * 20, y * 20, 20, 20), enemyTexture));
                         }
                     }
                     newMap.Unlocked = file.ReadBoolean();
@@ -292,6 +296,11 @@ namespace Inkcorperated
             foreach(Bullet b in bullets)
             {
                 b.Draw(batch, b.Team == Teams.Player ? Color.Black : Color.Red);
+            }
+
+            foreach(Enemy e in enemies)
+            {
+                e.Draw(batch, Color.White);
             }
 
             if (customBlocks.Count > 0)
