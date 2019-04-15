@@ -15,11 +15,13 @@ namespace Inkcorperated
         private int inkCapacity;
 		private int inkLevels;
 		private int yVelocity;
+        private float xVelocity;
 		private bool falling;
 		private const int GRAVITY = 1;
-		private const int SPEED = 2;
+		private const float SPEED = 2f;
         private bool jumpBoost;
         private bool speedBoost;
+        private const float friction = 0.98f;
 
 		// Properties
 		public bool Falling
@@ -60,6 +62,7 @@ namespace Inkcorperated
             inkCapacity = inkLevels;
 			this.inkLevels = inkLevels; // starting value of ink (can be changed for balancing)
 			yVelocity = 0;
+            xVelocity = 0;
 			falling = false;
             speedBoost = false;
             jumpBoost = false;
@@ -73,6 +76,7 @@ namespace Inkcorperated
             inkCapacity = inkLevels;
             this.inkLevels = inkLevels;
             yVelocity = 0;
+            xVelocity = 0;
             falling = false;
             X = bounds.X;
             Y = bounds.Y;
@@ -90,18 +94,49 @@ namespace Inkcorperated
 			if(kbState.IsKeyDown(Keys.D))
 			{
                 if (speedBoost)
-					X += (SPEED * 2);
+                {
+                    X += (int)(SPEED * 2);
+                    xVelocity = (SPEED * 2);
+                }
+					
                 else
-					X += SPEED;
+                {
+                    if(xVelocity > SPEED)
+                    {
+                        X += (int)xVelocity;
+                        xVelocity *= friction;
+                    }
+                    else
+                    {
+                        X += 2;
+                    }
+
+                }
+					
 				Direction = 1;
 			}
 			else if(kbState.IsKeyDown(Keys.A))
 			{
                 if (speedBoost)
-					X -= (SPEED * 2);
+                {
+                    X -= (int)(SPEED * 2);
+                    xVelocity = (SPEED * 2);
+                }
+
                 else
-					X -= SPEED;
-				Direction = -1;
+                {
+                    if (xVelocity > SPEED)
+                    {
+                        X -= (int)xVelocity;
+                        xVelocity *= friction;
+                    }
+                    else
+                    {
+                        X -= 2;
+                    }
+
+                }
+                Direction = -1;
 			}
 			
 			// Falling
