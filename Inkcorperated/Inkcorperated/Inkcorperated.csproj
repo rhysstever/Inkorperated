@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AnimationController.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="Bullet.cs" />
     <Compile Include="Button.cs" />
