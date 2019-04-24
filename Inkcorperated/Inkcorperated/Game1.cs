@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Media;
 
 namespace Inkcorperated
 {
@@ -55,6 +56,8 @@ namespace Inkcorperated
         private Drawable mainMenuBackground;
         private List<Tuple<Button<int>, bool>> levelButtons;
 
+        private Song backgroundMusic;
+
         public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -106,6 +109,8 @@ namespace Inkcorperated
             levelSelectBackground = new Drawable(new Rectangle(GraphicsDevice.Viewport.Width / 2 - 120, GraphicsDevice.Viewport.Height / 2 - 120, 240, 240), blankTexture);
             mainMenuBackground = new Drawable(new Rectangle(graphics.GraphicsDevice.Viewport.X, graphics.GraphicsDevice.Viewport.Y, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Content.Load<Texture2D>("MainMenu"));
 
+            backgroundMusic = Content.Load<Song>("Inkorporated Song");
+            MediaPlayer.IsRepeating = true;
             controller.LoadLevel(0);
         }
 
@@ -122,12 +127,14 @@ namespace Inkcorperated
 			switch(currentGameState)
 			{
 				case GameStates.MainMenu:
+                    MediaPlayer.Stop();
 					// When clicked, switches GameState from MainMenu to the level select
                     play.IsClicked(previousMouseState);
 					options.IsClicked(previousMouseState);
 					break;
 
                 case GameStates.LevelSelect:
+                    MediaPlayer.Stop();
                     foreach (Tuple<Button<int>, bool> b in levelButtons)
                     {
                         if(b.Item2)
@@ -140,10 +147,13 @@ namespace Inkcorperated
                     break;
 
                 case GameStates.Options:
-					backToTitle.IsClicked(previousMouseState);
+                    MediaPlayer.Stop();
+                    backToTitle.IsClicked(previousMouseState);
 					break;
 
 				case GameStates.Game:
+                    MediaPlayer.Volume = 1f;
+                    
 					if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.Escape))
 					{
 						currentGameState = GameStates.PauseMenu;
@@ -178,23 +188,26 @@ namespace Inkcorperated
 					break;
 
 				case GameStates.PauseMenu:
-					// When clicked, "unpauses" the game
-					// Changes GameState back from Pause to Game
-					unpause.IsClicked(previousMouseState);
+                    MediaPlayer.Volume = .25f;
+                    // When clicked, "unpauses" the game
+                    // Changes GameState back from Pause to Game
+                    unpause.IsClicked(previousMouseState);
                     backToTitle.IsClicked(previousMouseState);
                     if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.Escape))
 					{
 						currentGameState = GameStates.Game;
-					}
+                    }
 					break;
 
 				case GameStates.GameOver:
-					if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.Enter))
+                    MediaPlayer.Stop();
+                    if (Utilities.SingleKeyPress(previousKeyboardState, currentKBState, Keys.Enter))
 						currentGameState = GameStates.MainMenu;
 					break;
 
 				case GameStates.GameWon:
-					backToTitle.IsClicked(previousMouseState);
+                    MediaPlayer.Stop();
+                    backToTitle.IsClicked(previousMouseState);
 					break;
 			}
             
@@ -327,6 +340,7 @@ namespace Inkcorperated
         private void EnterLevel(int levelID)
         {
             currentGameState = GameStates.Game;
+            MediaPlayer.Play(backgroundMusic);
             controller.LoadLevel(levelID);
         }
 
