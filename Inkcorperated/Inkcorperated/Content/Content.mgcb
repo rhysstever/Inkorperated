@@ -128,6 +128,12 @@
 /processorParam:TextureFormat=Color
 /build:Ink Fill.png
 
+#begin Inkorporated Song Old.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Inkorporated Song Old.wav
+
 #begin MainMenu.png
 /importer:TextureImporter
 /processor:TextureProcessor
