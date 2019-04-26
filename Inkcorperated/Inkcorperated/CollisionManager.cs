@@ -78,7 +78,7 @@ namespace Inkcorperated
 			// If THIS is colliding, but the player is not, the player does not get moved
 			// (removes the "bouncing" of the player being moved back up off the floor every frame)
 			Rectangle bounceCheck = new Rectangle(controller.LevelPlayer.X, controller.LevelPlayer.Y + controller.LevelPlayer.Height, controller.LevelPlayer.Width, 1);
-			
+            bool shouldFall = true; ;
             // Checks collisions between the player and each block on the screen
             // foreach (Block block in allBlocks)
             // Console.WriteLine(controller.DrawingBlock);
@@ -94,28 +94,33 @@ namespace Inkcorperated
 					{
 						// Moves the player up or down away from the block
 						controller.LevelPlayer.Y -= intersection.Height * Math.Sign(allBlocks[i].Bounds.Y - controller.LevelPlayer.Y);
-						controller.LevelPlayer.YVelocity = 0;
-					}
+                        shouldFall = false;
+                    }
 					// Collision is occuring on either the right or left
-					else
+					else if(intersection.Height > intersection.Width)
 					{
 						// Moves the player left or right away from the block
 						controller.LevelPlayer.X -= intersection.Width * Math.Sign(allBlocks[i].Bounds.X - controller.LevelPlayer.X);
+                        shouldFall = true;
                     }
-
-                    checkBlockType(i);
                 }
-				else if(allBlocks[i].Bounds.Intersects(bounceCheck) && controller.LevelPlayer.YVelocity >= 0)
-				{
-					controller.LevelPlayer.Falling = false;
-					controller.LevelPlayer.YVelocity = 0;
+                if (allBlocks[i].Bounds.Intersects(bounceCheck) && controller.LevelPlayer.YVelocity >= 0)
                     checkBlockType(i);
-                }
+            }
 
-			}
+            if(shouldFall)
+            {
+                controller.LevelPlayer.Falling = true;
+            }
+            else if (!shouldFall)
+            {
+                controller.LevelPlayer.Falling = false;
+                controller.LevelPlayer.YVelocity = 0;
+                
+            }
 
-			// Checks for win condition (if player collides with the goal flag)
-			if(isColliding(controller.LevelPlayer, controller.Goal))
+            // Checks for win condition (if player collides with the goal flag)
+            if (isColliding(controller.LevelPlayer, controller.Goal))
 			{
 				// Progresses to next level
 				controller.NextLevel();
