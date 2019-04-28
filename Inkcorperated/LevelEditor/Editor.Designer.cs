@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(window));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Enemy = new System.Windows.Forms.Button();
             this.Eraser = new System.Windows.Forms.Button();
             this.Goal = new System.Windows.Forms.Button();
             this.Player = new System.Windows.Forms.Button();
@@ -43,7 +44,6 @@
             this.Map = new System.Windows.Forms.GroupBox();
             this.InkLimit = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
-            this.Enemy = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CurrentTile)).BeginInit();
@@ -65,6 +65,18 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Block Selector";
+            // 
+            // Enemy
+            // 
+            this.Enemy.BackColor = System.Drawing.Color.Transparent;
+            this.Enemy.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("Enemy.BackgroundImage")));
+            this.Enemy.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Enemy.Location = new System.Drawing.Point(62, 127);
+            this.Enemy.Name = "Enemy";
+            this.Enemy.Size = new System.Drawing.Size(50, 50);
+            this.Enemy.TabIndex = 6;
+            this.Enemy.UseVisualStyleBackColor = false;
+            this.Enemy.Click += new System.EventHandler(this.ColorPicker_Click);
             // 
             // Eraser
             // 
@@ -211,17 +223,6 @@
             this.label1.Size = new System.Drawing.Size(46, 13);
             this.label1.TabIndex = 6;
             this.label1.Text = "Ink Limit";
-            // 
-            // Enemy
-            // 
-            this.Enemy.BackColor = System.Drawing.Color.Transparent;
-            this.Enemy.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("Enemy.BackgroundImage")));
-            this.Enemy.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.Enemy.Location = new System.Drawing.Point(62, 127);
-            this.Enemy.Name = "Enemy";
-            this.Enemy.Size = new System.Drawing.Size(50, 50);
-            this.Enemy.TabIndex = 6;
-            this.Enemy.UseVisualStyleBackColor = false;
             // 
             // window
             // 

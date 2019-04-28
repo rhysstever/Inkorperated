@@ -15,11 +15,13 @@ namespace Inkcorperated
         private int inkCapacity;
 		private int inkLevels;
 		private int yVelocity;
+        private float xVelocity;
 		private bool falling;
 		private const int GRAVITY = 1;
-		private const int SPEED = 2;
+		private const float SPEED = 2f;
         private bool jumpBoost;
         private bool speedBoost;
+        private const float friction = 0.98f;
 
 		// Properties
 		public bool Falling
@@ -54,12 +56,13 @@ namespace Inkcorperated
 		/// <param name="bounds">The hitbox of the player</param>
 		/// <param name="texture">The visual of the player</param>
 		/// <param name="fireRate">How often the player is allowed to shoot</param>
-		public Player(int health, Teams team, int direction, Rectangle bounds, Texture2D texture, int inkLevels, float fireRate = 1.0f) 
-			: base(health, team, direction, bounds, texture, fireRate)
+		public Player(int health, int direction, Rectangle bounds, Texture2D texture, int inkLevels, float fireRate = 1.0f) 
+			: base(health, Teams.Player, direction, bounds, texture, fireRate)
 		{
             inkCapacity = inkLevels;
 			this.inkLevels = inkLevels; // starting value of ink (can be changed for balancing)
 			yVelocity = 0;
+            xVelocity = 0;
 			falling = false;
             speedBoost = false;
             jumpBoost = false;
@@ -73,6 +76,7 @@ namespace Inkcorperated
             inkCapacity = inkLevels;
             this.inkLevels = inkLevels;
             yVelocity = 0;
+            xVelocity = 0;
             falling = false;
             X = bounds.X;
             Y = bounds.Y;
@@ -90,18 +94,49 @@ namespace Inkcorperated
 			if(kbState.IsKeyDown(Keys.D))
 			{
                 if (speedBoost)
-					X += (SPEED * 2);
+                {
+                    X += (int)(SPEED * 2);
+                    xVelocity = (SPEED * 2);
+                }
+					
                 else
-					X += SPEED;
+                {
+                    if(xVelocity > SPEED)
+                    {
+                        X += (int)xVelocity;
+                        xVelocity *= friction;
+                    }
+                    else
+                    {
+                        X += 2;
+                    }
+
+                }
+					
 				Direction = 1;
 			}
 			else if(kbState.IsKeyDown(Keys.A))
 			{
                 if (speedBoost)
-					X -= (SPEED * 2);
+                {
+                    X -= (int)(SPEED * 2);
+                    xVelocity = (SPEED * 2);
+                }
+
                 else
-					X -= SPEED;
-				Direction = -1;
+                {
+                    if (xVelocity > SPEED)
+                    {
+                        X -= (int)xVelocity;
+                        xVelocity *= friction;
+                    }
+                    else
+                    {
+                        X -= 2;
+                    }
+
+                }
+                Direction = -1;
 			}
 			
 			// Falling
@@ -110,7 +145,7 @@ namespace Inkcorperated
 			if(falling)
 			{
 				Y += yVelocity;
-				yVelocity = yVelocity + GRAVITY;
+				yVelocity = Math.Min(yVelocity + GRAVITY, 17);
 			}
 
 			// Jumping
