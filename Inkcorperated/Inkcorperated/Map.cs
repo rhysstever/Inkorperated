@@ -21,6 +21,7 @@ namespace Inkcorperated
         public Rectangle Goal { get { return goal; } set { goal = value; } }
         public int InkLimit { get { return inkLimit; } }
 		public List<Block> MapBlocks { get { return map; } }
+        public List<Enemy> Enemies { get { return enemies; } }
         public bool Unlocked { get { return unlocked; } set { unlocked = value; } }
 
         public Map(Rectangle playerStart, int inkLimit, Rectangle goal, bool unlocked){
@@ -92,9 +93,6 @@ namespace Inkcorperated
                         b.Draw(batch, Color.Red);
                         break;
                 }
-            }
-            foreach(Enemy e in enemies){
-                e.Draw(batch, Color.White);
             }
         }
     }

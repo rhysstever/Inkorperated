@@ -131,6 +131,11 @@ namespace Inkcorperated
             goal.Y = levels[currentLevel].Goal.Y;
             goal.Width = levels[currentLevel].Goal.Width;
             goal.Height = levels[currentLevel].Goal.Height;
+            enemies = new List<Enemy>();
+            foreach(Enemy e in levels[currentLevel].Enemies)
+            {
+                enemies.Add(new Enemy(e.Range, e.Health, e.Direction, e.Bounds, e.Texture, e.FireRate));
+            }
         }
 
 		public Map GetCurrentMap()
@@ -272,7 +277,11 @@ namespace Inkcorperated
             levels[currentLevel].Draw(batch);
             goal.Draw(batch, Color.White);
             player.Draw(batch, Color.White);
-            
+            foreach (Enemy e in enemies)
+            {
+                e.Draw(batch, Color.White);
+            }
+
             switch (selectedType)
             {
                 case BlockType.Basic:

@@ -34,7 +34,6 @@ namespace Inkcorperated
 				else
 					batch.Draw(texture, Bounds, c);
 			}
-			
         }
     }
 }

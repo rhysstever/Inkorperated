@@ -31,6 +31,8 @@ namespace Inkcorperated
 			get { return direction; }
 			set { direction = value; }
 		}
+        public Texture2D Texture { get { return texture; } }
+        public float FireRate { get { return fireRate; } }
 
         public Entity(int health, Teams team, int direction, Rectangle bounds, Texture2D texture, float fireRate) 
 			: base(bounds, texture)
