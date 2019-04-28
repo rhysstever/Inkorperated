@@ -148,8 +148,7 @@ namespace Inkcorperated
 						// if different, damage is dealt
 						if (bullet.Team != Teams.Enemy)
 						{
-							if (isColliding(bullet, enemy))
-								enemy.Health -= bullet.Damage;
+							enemy.Health -= bullet.Damage;
 						}
 					}
 				}
