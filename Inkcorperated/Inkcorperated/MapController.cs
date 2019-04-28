@@ -102,7 +102,7 @@ namespace Inkcorperated
                                 newMap.Goal = new Rectangle(x * 20, y * 20, 20, 20);
                             else if (value == 6)
                                 newMap.AddEnemy(new Enemy(5, 1, 1, new Rectangle(x * 20, y * 20, 20, 20), enemyTexture));
-                            else if (value == 6)
+                            else if (value == 7)
                                 newMap.AddEnemy(new Enemy(5, 1, -1, new Rectangle(x * 20, y * 20, 20, 20), enemyTexture));
                         }
                     }
@@ -300,7 +300,7 @@ namespace Inkcorperated
 
             foreach(Enemy e in enemies)
             {
-                e.Draw(batch, Color.White);
+				e.Draw(batch, Color.White);
             }
 
             if (customBlocks.Count > 0)

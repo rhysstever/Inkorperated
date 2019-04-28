@@ -27,10 +27,14 @@ namespace Inkcorperated
         //A new Draw method for the player. Flips based on the direction the enemy is facing
         public new void Draw(SpriteBatch batch, Color c)
         {
-            if (Direction == -1) // facing left
-                batch.Draw(texture, Bounds, null, c, 0.0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0.0f);
-            else
-                batch.Draw(texture, Bounds, c);
+			if(Health > 0)
+			{
+				if (Direction == -1) // facing left
+					batch.Draw(texture, Bounds, null, c, 0.0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0.0f);
+				else
+					batch.Draw(texture, Bounds, c);
+			}
+			
         }
     }
 }

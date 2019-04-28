@@ -137,7 +137,7 @@ namespace Inkcorperated
 					|| bullet.Bounds.X < 0 || bullet.Bounds.X > controller.Graphics.GraphicsDevice.Viewport.Width)
 					collided = true;
 
-				// If bullet hits an entity
+				// If bullet hits an enemy
 				foreach (Enemy enemy in controller.Enemies)
 				{
 					if (isColliding(bullet, enemy))
