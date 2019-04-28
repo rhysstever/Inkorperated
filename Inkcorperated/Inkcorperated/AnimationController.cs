@@ -29,7 +29,7 @@ namespace Inkcorperated
         public AnimationController()
         {
             currentFrame = 1;
-            fps = 10.0;
+            fps = 8.0;
             secondsPerFrame = 1.0f / fps;
             timeCounter = 0;
         }

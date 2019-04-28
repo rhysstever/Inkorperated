@@ -22,6 +22,7 @@ namespace Inkcorperated
         private bool jumpBoost;
         private bool speedBoost;
         private const float friction = 0.98f;
+        private AnimationController playerAnimation;
 
 		// Properties
 		public bool Falling
@@ -175,8 +176,11 @@ namespace Inkcorperated
         //A new Draw method for the player. Flips based on if the A or D button is pressed
         public new void Draw(SpriteBatch batch, Color c)
         {
-            if (Direction == -1) // facing left
+            if (Direction == -1)
+            {
+                // facing left
                 batch.Draw(texture, Bounds, null, Color.White, 0.0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0.0f);
+            }
             else
                 batch.Draw(texture, Bounds, Color.White);
         }

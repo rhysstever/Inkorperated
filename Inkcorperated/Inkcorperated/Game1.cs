@@ -54,6 +54,8 @@ namespace Inkcorperated
 
         private Drawable levelSelectBackground;
         private Drawable mainMenuBackground;
+        private Drawable gameWon;
+        private Drawable gameOver;
         private List<Tuple<Button<int>, bool>> levelButtons;
 
         private Song backgroundMusic;
@@ -108,6 +110,8 @@ namespace Inkcorperated
 
             levelSelectBackground = new Drawable(new Rectangle(GraphicsDevice.Viewport.Width / 2 - 120, GraphicsDevice.Viewport.Height / 2 - 120, 240, 240), blankTexture);
             mainMenuBackground = new Drawable(new Rectangle(graphics.GraphicsDevice.Viewport.X, graphics.GraphicsDevice.Viewport.Y, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Content.Load<Texture2D>("MainMenu"));
+            gameWon = new Drawable(new Rectangle(graphics.GraphicsDevice.Viewport.X, graphics.GraphicsDevice.Viewport.Y, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Content.Load<Texture2D>("GameWon"));
+            gameOver = new Drawable(new Rectangle(graphics.GraphicsDevice.Viewport.X, graphics.GraphicsDevice.Viewport.Y, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height), Content.Load<Texture2D>("GameOver"));
 
             backgroundMusic = Content.Load<Song>("Inkorporated Song");
             MediaPlayer.IsRepeating = true;
@@ -306,28 +310,20 @@ namespace Inkcorperated
                     GraphicsDevice.Clear(Color.Black);
 
                     // Writes GameOver
-                    spriteBatch.DrawString(
-                    fontArial,
-                    "Game Over",
-                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Game Over").X / 2), GraphicsDevice.Viewport.Height / 4),
-                    Color.White);
+                    gameOver.Draw(spriteBatch, Color.White);
 
                     // Writes the instructions
                     spriteBatch.DrawString(
                     fontArial,
                     "Hit 'Enter' to Return to Try Again.",
-                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Return to Try Again.").X / 2), (GraphicsDevice.Viewport.Height / 4) + 50),
+                    new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Hit 'Enter' to Return to Try Again.").X / 2), (GraphicsDevice.Viewport.Height / 2)),
                     Color.White);
                     break;
 				case GameStates.GameWon:
 					GraphicsDevice.Clear(Color.Gold);
 
 					// Writes GameWon
-					spriteBatch.DrawString(
-					fontArial,
-					"Game Won",
-					new Vector2((GraphicsDevice.Viewport.Width / 2) - (fontArial.MeasureString("Game Won").X / 2), GraphicsDevice.Viewport.Height / 4),
-					Color.Black);
+					gameWon.Draw(spriteBatch, Color.White);
 
 					backToTitle.Draw(spriteBatch, Color.Black, Color.White, fontArial);
 					break;
