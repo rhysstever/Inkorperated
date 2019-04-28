@@ -111,7 +111,6 @@ namespace Inkcorperated
                     {
                         X += 2;
                     }
-
                 }
 					
 				Direction = 1;
@@ -135,7 +134,6 @@ namespace Inkcorperated
                     {
                         X -= 2;
                     }
-
                 }
                 Direction = -1;
 			}

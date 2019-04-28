@@ -59,7 +59,7 @@ namespace Inkcorperated
         /// <returns>If the entity can fire</returns>
         public bool CanFire()
         {
-            if(fireRate < timeSinceLastShot)
+            if((fireRate < timeSinceLastShot) && Health > 0)
             {
                 timeSinceLastShot = 0;
                 return true;

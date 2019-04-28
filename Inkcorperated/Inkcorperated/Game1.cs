@@ -163,13 +163,19 @@ namespace Inkcorperated
 						currentGameState = GameStates.PauseMenu;
 					}
 
-					if (player.Y > GraphicsDevice.Viewport.Height)
+					if ((player.Y > GraphicsDevice.Viewport.Height) || player.Health <= 0)
 					{
 						currentGameState = GameStates.GameOver;
 					}
 
 					// Handles player movement
 					player.Update(gameTime, previousKeyboardState);
+					// Handles enemy shooting
+					foreach(Enemy enemy in controller.Enemies)
+					{
+						enemy.Update(gameTime.ElapsedGameTime.Milliseconds);
+						enemy.Fire();
+					}
 					//Handles drawing blocks
 					controller.CheckForRectDraw(previousMouseState, GraphicsDevice.Viewport.Bounds);
 					//Moves all of the bullets
