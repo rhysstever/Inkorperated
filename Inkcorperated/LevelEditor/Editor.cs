@@ -64,6 +64,9 @@ namespace LevelEditor
             InitializeComponent();
             player = Player.BackgroundImage;
             goal = Goal.BackgroundImage;
+            enemyRight = Enemy.BackgroundImage;
+            enemyLeft = (Image)Enemy.BackgroundImage.Clone();
+            enemyLeft.RotateFlip(RotateFlipType.RotateNoneFlipX);
             LoadLevel(path);
         }
 
