@@ -1,3 +1,3 @@
-# game
+# Inkorperated
 
-106 group project repo
+Project by: Brandon Ly, Jacob Brosler, Sean Foley, and Rhys Stever
